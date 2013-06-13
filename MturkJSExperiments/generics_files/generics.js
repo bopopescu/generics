@@ -31,8 +31,6 @@ var properties = shuffle(["have horns", "have horns", "have horns",
                           "have horns", "have horns", "have horns",
                           "have horns", "have horns"]);
 var examplesFirst = shuffle([true, true, true, true, true,
-                             true, true, true, true, true,
-                             false, false, false, false, false,
                              false, false, false, false, false]);
 
 // singular form of nonce words
@@ -56,10 +54,9 @@ var trial = {
     nneg = nPosNeg[trial.qnum][1];
     ntot = npos + nneg;
     showGen = nPosNeg[trial.qnum][2];
-    entity1 = entities[trial.qnum * 2];
-    entity2 = entities[trial.qnum * 2 + 1];
-    property = properties[trial.qnum];
-    exFirst = examplesFirst[trial.qnum];
+    entity1 = entities.shift();
+    entity2 = entities.shift();
+    property = properties.shift();
 
     // clear examples from previous trial
     var imagesSpan = document.getElementById("images");
@@ -94,6 +91,7 @@ var trial = {
 
     // Generic
     if (showGen) {
+      exFirst = examplesFirst.shift();
       generic = "You have heard Scientist Sally mention " + entity1 +
                     " before. When you first came to the planet," +
                     " she told you, \"" + capitalize(entity1) + 
