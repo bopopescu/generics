@@ -6,6 +6,8 @@ var nPosNeg = [];
 for (i=0; i<=maxExamples; i++) {
   for (j=0; j<=maxExamples-i; j++) {
     nPosNeg.push([i, j, true]); // with generic
+    // alternatively don't have this if statement, and use that case
+    // for the question to check turkers are paying attention
     if (i+j > 0) {
       nPosNeg.push([i, j, false]); // without generic
     }
@@ -92,10 +94,10 @@ var trial = {
     // Generic
     if (showGen) {
       exFirst = examplesFirst.shift();
-      generic = "You have heard Scientist Sally mention " + entity1 +
-                    " before. When you first came to the planet," +
-                    " she told you, \"" + capitalize(entity1) + 
-                    " have horns\".";
+      generic = "You have heard Scientist Sally, who is an expert on the " +
+                "monsters of this planet, mention " + entity1 + " before. " +
+                "When you first came to the planet, she told you, \"" + 
+                capitalize(entity1) + " have horns\".";
       if (exFirst) {
         var gen1 = "";
         var gen2 = generic;
@@ -108,10 +110,19 @@ var trial = {
         var gen2 = "";
     }
 
+    var q = capitalize(entity2) + " are another kind of monster that live " +
+            "on this planet. What proportion of " + entity2 + 
+            " do you think have horns?"
+
+    var intr = capitalize(entity1) + " are a kind of monster that live on " +
+               "this planet."
+
     $(".pr").show();
     $("#ex").html(ex);
     $("#gen1").html(gen1);
     $("#gen2").html(gen2);
+    $("#q").html(q);
+    $("#intr").html(intr);
 
     // display slide, now with appropriate information for this trial
     showSlide("trialInfo");

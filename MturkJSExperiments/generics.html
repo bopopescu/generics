@@ -45,7 +45,7 @@
 
 <!-- Information for Trial -->
 <div class="slide" id="trialInfo" style="display: none;">
-  <p>Feps are a kind of monster that live on this planet.</p>
+  <p clas="pr" id="intr"></p>
   <p class="pr" id="gen1">{{}}</p>
   <p class="pr" id="ex">{{}}</p>
   <span id="images"></span>
@@ -55,8 +55,7 @@
 
 <!-- Question for Trial -->
 <div class="slide" id="trialQ" style="display: none;">
-  <p>Wugs are another kind of monster that live on this planet. 
-  What proportion of wugs do you think have horns?</p>
+  <p class="pr" id="q">{{}}</p>
   <form id="propform">
     Answer: <input type="text" name="prop"><br>
     <input value="Continue" type="button" onclick="trial.submit()">
