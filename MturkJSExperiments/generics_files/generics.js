@@ -27,7 +27,7 @@ function language() {
       lang = lang.slice(3,lang.length);
       //experiment.data["language"] = lang;
       showSlide("finished");
-      setTimeout(function() {turk.submit(experiment.data)}, 1000);
+      //setTimeout(function() {turk.submit(experiment.data)}, 1000);
     }
   });
 }
