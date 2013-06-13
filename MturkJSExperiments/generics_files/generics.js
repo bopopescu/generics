@@ -1,9 +1,16 @@
 qnum = 0;
-qtotal = 3;
+qtotal = 1;
 
 function instructions() {showSlide("instructions");}
 
 function trialInfo() {
+  examples = ["horns1", "nohorns2", "horns3"];
+  for (i=0; i<examples.length; i++) {
+    var img = document.createElement("img");
+    img.src = "generics_files/" + examples[i] + ".png";
+    var imagesSpan = document.getElementById("images");
+    imagesSpan.appendChild(img);
+  }
   showSlide("trialInfo");
 }
 
