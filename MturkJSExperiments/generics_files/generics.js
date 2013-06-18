@@ -1,6 +1,10 @@
 // collect all pairs of npos and nneg (number of pos and neg examples)
 // should be 10 pairs when max examples is 3,
 // double so we can try each pair with and without generics
+
+var jSlider;
+var qResponse = .5;
+
 var maxExamples = 3;
 var nPosNeg = [];
 for (i=0; i<=maxExamples; i++) {
@@ -49,7 +53,11 @@ function instructions() {showSlide("instructions");}
 var trial = {
   qnum: 0, // question number (increments from 0 to qtotoal)
 
-  info: function() {
+  // compuations of variables for this trial, including what strings and
+  // images to display on info and question slides
+  // run right before info slide is displayed. results affect question slide
+  // as well.
+  computations: function() {
 
     // variables for this trial
     npos = nPosNeg[trial.qnum][0];
@@ -110,34 +118,53 @@ var trial = {
         var gen2 = "";
     }
 
-    var q = capitalize(entity2) + " are another kind of monster that live " +
-            "on this planet. What proportion of " + entity2 + 
-            " do you think have horns?"
+    // more strings
+    var otherEntity = capitalize(entity2) + " are another kind of monster "
+                      "that live on this planet.";
+
+    var q = "Imagine you came accross 100 " + entity2 + 
+            ". How many of those " + entity2 + " do you think have horns?";
 
     var intr = capitalize(entity1) + " are a kind of monster that live on " +
                "this planet."
 
+    // send strings to html
     $(".pr").show();
     $("#ex").html(ex);
     $("#gen1").html(gen1);
     $("#gen2").html(gen2);
     $("#q").html(q);
+    $("#otherEntity").html(otherEntity);
     $("#intr").html(intr);
+  },
 
+  info: function() {
+    trial.computations();
     // display slide, now with appropriate information for this trial
     showSlide("trialInfo");
   },
 
   question: function() {
+    $("#leftanchor").html("0") 
+    $("#rightanchor").html("100")
+
     showSlide("trialQ");
+    
+    jSlider = new Slider('my-slider', {
+      speed: 20,
+      callback: function(value) {
+        qResponse = value
+      }
+    });
+    jSlider.setValue(.5);
   },
 
   submit: function() {
-    proportion = $("#propform").serialize();
-    document.getElementById("propform").reset();
+    //proportion = $("#propform").serialize();
+    //document.getElementById("propform").reset();
     trial.qnum++;
     if (trial.qnum < qtotal) {trial.info();} else {language();}
-  },
+  }
 }
 
 function language() {

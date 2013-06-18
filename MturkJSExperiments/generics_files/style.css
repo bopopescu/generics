@@ -14,6 +14,27 @@ This stuff can be ported from experiment to experiment.*/
   padding: 1% 2% 1% 2%;
 }
 
+.slider {
+	position: relative;
+	height: 30px;
+	background: #EEE;
+}
+
+.slider .handle {
+	position: absolute;
+	width: 20px;
+	height: 30px;
+	background: #CC0000;
+	color: #FFF;
+	line-height: 30px;
+	text-align: center;
+	cursor: pointer;
+}
+
+.slider .disabled {
+	background: #898989;
+}
+
 input, select, button {font-family: Georgia, serif; font-size: 14px;}
 
 .table {
