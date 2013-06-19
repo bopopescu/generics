@@ -2,8 +2,7 @@
 // should be 10 pairs when max examples is 3,
 // double so we can try each pair with and without generics
 
-var jSlider;
-var qResponse = .5;
+var simpleSlider;
 
 var maxExamples = 3;
 var nPosNeg = [];
@@ -29,15 +28,21 @@ var entities = shuffle(["wugs", "feps", "blickets", "daxes", "speffs",
                         "zibs", "feps", "blickets", "daxes", "speffs", 
                         "zibs", "feps", "blickets", "daxes", "speffs", 
                         "zibs", "feps", "blickets", "daxes", "speffs"]);
-var properties = shuffle(["have horns", "have horns", "have horns",
-                          "have horns", "have horns", "have horns",
-                          "have horns", "have horns", "have horns",
+var properties = shuffle(["have horns", "have little appendages that stick off of them",
+                          "have little appendages that stick off of them",
+                          "are green", "are green", "are green",
+                          "have swirly branches", "have swirly branches", 
+                          "have swirly branches",
                           "have horns", "have horns", "have horns",
                           "have horns", "have horns", "have horns",
                           "have horns", "have horns", "have horns",
                           "have horns", "have horns"]);
 var examplesFirst = shuffle([true, true, true, true, true,
                              false, false, false, false, false]);
+var categories = {"have horns":"monster",
+                  "have little appendages that stick off of them":"microbe",
+                  "are green":"crystal",
+                  "have swirly branches":"tree"};
 
 // singular form of nonce words
 var singular = {"wugs":"wug", "feps":"fep", "blickets":"blicket", 
@@ -51,6 +56,8 @@ $(".numberofquestions").html(qtotal);
 function instructions() {showSlide("instructions");}
 
 var trial = {
+  qResponse: .5,
+
   qnum: 0, // question number (increments from 0 to qtotoal)
 
   // compuations of variables for this trial, including what strings and
@@ -67,6 +74,7 @@ var trial = {
     entity1 = entities.shift();
     entity2 = entities.shift();
     property = properties.shift();
+    category = categories[property];
 
     // clear examples from previous trial
     var imagesSpan = document.getElementById("images");
@@ -87,14 +95,24 @@ var trial = {
 
       // collect at most 3 image files into "examples" list based on how many 
       // positive and negative examples there should be in this trial
-      positives = shuffle(["horns1", "horns2", "horns3"]);
-      negatives = shuffle(["nohorns1", "nohorns2", "nohorns3"]);
+      function posImg(numStr) {
+        imgString = "./generics_files/images/" + category + "-pos" + numStr + ".png";
+        return imgString;
+      }
+      function negImg(numStr) {
+        imgString = "./generics_files/images/" + category + "-neg" + numStr + ".png";
+        return imgString;
+      }
+      
+      var numbers = ["1", "2", "3"];
+      positives = shuffle(numbers.map(posImg));
+      negatives = shuffle(numbers.map(negImg));
       examples = shuffle(positives.slice(0,npos).concat(negatives.slice(0,nneg)));
 
       // add images to the info slide for this trial
       for (i=0; i<examples.length; i++) {
         var img = document.createElement("img");
-        img.src = "generics_files/" + examples[i] + ".png";
+        img.src = examples[i]
         imagesSpan.appendChild(img);
       }
     } else {ex = "";}
@@ -103,9 +121,9 @@ var trial = {
     if (showGen) {
       exFirst = examplesFirst.shift();
       generic = "You have heard Scientist Sally, who is an expert on the " +
-                "monsters of this planet, mention " + entity1 + " before. " +
-                "When you first came to the planet, she told you, \"" + 
-                capitalize(entity1) + " have horns\".";
+                category + "s of this planet, mention " + entity1 + " before." +
+                " When you first came to the planet, she told you, \"" + 
+                capitalize(entity1) + " " + property + "\".";
       if (exFirst) {
         var gen1 = "";
         var gen2 = generic;
@@ -119,14 +137,14 @@ var trial = {
     }
 
     // more strings
-    var otherEntity = capitalize(entity2) + " are another kind of monster "
-                      "that live on this planet.";
+    var otherEntity = capitalize(entity2) + " are another kind of " + 
+                      category + " that are found on this planet.";
 
     var q = "Imagine you came accross 100 " + entity2 + 
-            ". How many of those " + entity2 + " do you think have horns?";
+            ". How many of those " + entity2 + " do you think " + property +"?";
 
-    var intr = capitalize(entity1) + " are a kind of monster that live on " +
-               "this planet."
+    var intr = capitalize(entity1) + " are a kind of " + category + 
+               " that are found on this planet."
 
     // send strings to html
     $(".pr").show();
@@ -148,15 +166,14 @@ var trial = {
     $("#leftanchor").html("0") 
     $("#rightanchor").html("100")
 
+    var sliderCase = document.getElementById("sliderCase");
+    sliderCase.innerHTML = '<div id="simple-slider" class="dragdealer"><div class="red-bar handle"></div></div>';
     showSlide("trialQ");
-    
-    jSlider = new Slider('my-slider', {
-      speed: 20,
-      callback: function(value) {
-        qResponse = value
-      }
+    simpleSlider = new Dragdealer('simple-slider', {
+      speed:20,
+      callback: function(value) {experiment.qResponse = value;}
     });
-    jSlider.setValue(.5);
+    simpleSlider.setValue(.5);
   },
 
   submit: function() {
