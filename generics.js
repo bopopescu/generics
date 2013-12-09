@@ -42,11 +42,15 @@ var distBins = {
   // These distributions are the number of tokens per type that have the target feature.
   // Each distribution should have the same number of elements as the number of trainings_per_category above.
   // The max value within each distribution is the product of training_rows and training_columns above.
-  beta: shuffle([0, .05, .95, 1]),
-  binary: shuffle([0, 0, 1, 1]),
-  uniform: shuffle([0, .33333, .66667, 1]),
-  uniform_low: shuffle([0, .16667, .33333, .5])
+  beta: [0, .05, .95, 1],
+  binary: [0, 0, 1, 1],
+  uniform: [0, .33333, .66667, 1],
+  uniform_low: [0, .16667, .33333, .5]
 };
+console.log(distBins["beta"]);
+console.log(distBins["binary"]);
+console.log(distBins["uniform"]);
+console.log(distBins["uniform_low"]);
 
 //**********things that are randomized:
 var nonceWords = shuffle(["wug", "dax", "fep",
@@ -88,6 +92,7 @@ $(document).ready(function() {
 var experiment = {
   data: {
     domain:domain,
+    fix:true,
     property:property,
     utteranceType:utteranceType,
     nFamiliarizations:nFamiliarizations,
