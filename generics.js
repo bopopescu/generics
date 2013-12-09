@@ -1,3 +1,5 @@
+
+
 function caps(a) {return a.substring(0,1).toUpperCase() + a.substring(1,a.length);}
 function uniform(a, b) { return ( (Math.random()*(b-a))+a ); }
 function showSlide(id) { $(".slide").hide(); $("#"+id).show(); }
@@ -144,7 +146,8 @@ var experiment = {
       nrow: training_rows,
       ncol: training_columns,
       drawnObjects: [],
-      nPositiveExamples:nPositiveExamples
+      nPositiveExamples:nPositiveExamples,
+      qType:"familiarization"
     }
 
     var hasProp = [];
@@ -211,7 +214,8 @@ var experiment = {
     var nResponses = 0;
 
     var trialData = {
-      responses:[]
+      responses:[],
+      qType:"target"
     };
 
     function changeCreator(i) {
@@ -253,7 +257,7 @@ var experiment = {
         var high = (i+1)*binWidth;
         lowers.push(low);
         uppers.push(high);
-        ranges += '<td align="center" width="' + otherColWidth + '">' + low + '-' + high + '</td>';
+        ranges += '<td align="center" width="' + otherColWidth + '">' + low + '-' + high + ' ' + plural(wug) + ' with ' + property + '</td>';
     }
     $("#sliderbins").html('<td height="80" width="' + firstColWidth + '">Extremely Likely</td>' + sliders);
     $("#ranges").html('<td width="' + firstColWidth + '"></td>' + ranges);
