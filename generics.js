@@ -93,7 +93,8 @@ var experiment = {
     nFamiliarizations:nFamiliarizations,
     nExamples:nExamples,
     nDomains:nDomains,
-    nonTargetProp:nonTargetProp
+    nonTargetProp:nonTargetProp,
+    distribution:distribution
   },
   
   intro: function() {
