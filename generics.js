@@ -197,6 +197,7 @@ var experiment = {
   target: function(qNumber) {
     var wug = nonceWords[qNumber];
     showSlide("target");
+    $(".err").hide();
     $(".Wugs").html(caps(plural(wug)));
     $(".Wug").html(caps(wug));
     $(".wugs").html(plural(wug));
@@ -259,7 +260,7 @@ var experiment = {
         var high = (i+1)*binWidth;
         lowers.push(low);
         uppers.push(high);
-        ranges += '<td align="center" width="' + otherColWidth + '">' + low + '-' + high + ' ' + plural(wug) + ' with ' + property + '</td>';
+        ranges += '<td align="center" width="' + otherColWidth + '" margin="5px">' + low + '-' + high + ' ' + plural(wug) + ' with ' + property + '</td>';
     }
     $("#sliderbins").html('<td height="80" width="' + firstColWidth + '">Extremely Likely</td>' + sliders);
     $("#ranges").html('<td width="' + firstColWidth + '"></td>' + ranges);
