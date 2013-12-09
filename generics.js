@@ -60,7 +60,7 @@ var domains = shuffle(["tree", "flower", "monster", "bird", "microbe", "bug", "f
 var utteranceTypes = shuffle(["generic", "none", "specific"]);
 var distributions = shuffle(["beta", "binary", "uniform", "uniform_low"]);
 var propertyIndices = shuffle([0, 1]);
-var nonTargetProps = shuffle([true, false]);
+//var nonTargetProps = shuffle([true, false]);
 
 //random values that are constant throughout experiment:
 var domain = domains[0];
@@ -68,7 +68,7 @@ var propertyIndex = propertyIndices[0];
 var property = properties[domain][propertyIndex];
 var utteranceType = utteranceTypes[0];
 var distribution = distributions[0];
-var nonTargetProp = nonTargetProps[0];
+var nonTargetProp = false;//nonTargetProps[0];
 //************************************
 console.log(domain);
 
