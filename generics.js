@@ -60,6 +60,7 @@ var domains = shuffle(["tree", "flower", "monster", "bird", "microbe", "bug", "f
 var utteranceTypes = shuffle(["generic", "none", "specific"]);
 var distributions = shuffle(["beta", "binary", "uniform", "uniform_low"]);
 var propertyIndices = shuffle([0, 1]);
+var nonTargetProps = shuffle([true, false]);
 
 //random values that are constant throughout experiment:
 var domain = domains[0];
@@ -67,6 +68,7 @@ var propertyIndex = propertyIndices[0];
 var property = properties[domain][propertyIndex];
 var utteranceType = utteranceTypes[0];
 var distribution = distributions[0];
+var nonTargetProp = nonTargetProps[0];
 //************************************
 console.log(domain);
 
@@ -90,7 +92,8 @@ var experiment = {
     utteranceType:utteranceType,
     nFamiliarizations:nFamiliarizations,
     nExamples:nExamples,
-    nDomains:nDomains
+    nDomains:nDomains,
+    nonTargetProp:nonTargetProp
   },
   
   intro: function() {
@@ -168,9 +171,9 @@ var experiment = {
         var index = row*training_columns + col;
         if (propertyIndex == 0) {
           prop0 = hasProp[index]; //sample this!!!!
-          prop1 = false;
+          prop1 = nonTargetProp;
         } else {
-          prop0 = false;
+          prop0 = nonTargetProp;
           prop1 = hasProp[index]; //sample this!!!
         }
         drawnObject = thing.draw("svg" + index, prop0, prop1, 0.5);
@@ -182,7 +185,6 @@ var experiment = {
 
     $(".continue").click(function() {
       $(".continue").unbind("click");
-      $(".err").hide();
       experiment.data["trial" + qNumber] = trialData;
       if (qNumber + 1 < nQs) {
         experiment.trial(qNumber+1);
