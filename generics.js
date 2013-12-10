@@ -36,24 +36,32 @@ var properties = {"tree":["berries", "leaves"],
                   "bird":["crests", "tails"],
                   "microbe":["spikes", "bumps"],
                   "fish":["fangs", "whiskers"]}
+var distributions = {
+  "2":[2],
+  "10":[10],
+  "18":[18],
+  "foo":shuffle([1,2,3])
+};
+
 
 //**********things that are randomized:
-var nonceWords = shuffle(["wug", "dax", "fep",
+var nonceWords = shuffle(["wug", "dax", "fep", "tig", "speff",
+                          "zib", "gub",
                           "wost", "wock", "thog", "snim", "ript",
                           "quog", "polt", "poch", "murp", "mulb",
                           "mork", "mopt", "monx", "mone", "moge",
                           "lide", "hoil", "hoff", "hisp", "hinx",
                           "hife", "hett", "fraw", "fing", "fick",
-                          "blim"]);
+                          "blim", "zop", "blick"]);
 var domains = shuffle(["tree", "flower", "monster", "bird", "microbe", "bug", "fish"])
 var propertyIndices = shuffle([0, 0, 0, 0, 1, 1, 1, 1]);
 var conditions = shuffle([
-  ["generic", 2],
-  ["generic", 10],
-  ["generic", 18],
-  ["none", 2],
-  ["none", 10],
-  ["none", 18]
+  ["generic", "2"],
+  ["generic", "10"],
+  ["generic", "18"],
+  ["none", "2"],
+  ["none", "10"],
+  ["none", "18"]
 ])
 //************************************
 
@@ -90,6 +98,20 @@ function condition(qNumber) {
 $(document).ready(function() {
   showSlide("consent");
   $("#mustaccept").hide();
+  if (nFamiliarizations == 1) {
+    $(".fam1").show();
+    $(".fam2").hide();
+  } else {
+    $(".fam1").hide();
+    $(".fam2").show();
+  }
+  if (nDomains == 1) {
+    $(".dom1").show();
+    $(".dom2").hide();
+  } else {
+    $(".dom1").hide();
+    $(".dom2").show();
+  }
 });
 
 var experiment = {
@@ -154,7 +176,9 @@ var experiment = {
                 
     $("#examples").html(training_html);
 
-    var nPositiveExamples = condition(qNumber)[1];
+    var distribution = condition(qNumber)[1];
+    var nPositiveExamplesList = distributions[distribution];
+    var nPositiveExamples = nPositiveExamplesList[ (qNumber % nSet) - 1];
 
     var trialData = {
       nrow: training_rows,
@@ -163,6 +187,7 @@ var experiment = {
       condition: condition(qNumber),
       domain: domain(qNumber),
       property: property(qNumber),
+      distribution:distribution,
       nPositiveExamples:nPositiveExamples,
       nonceWord: wug,
       utteranceType: condition(qNumber)[0],
@@ -177,8 +202,6 @@ var experiment = {
       hasProp.push(false);
     }
     var hasProp = shuffle(hasProp);
-    console.log(nPositiveExamples);
-    console.log(hasProp);
 
     for (var row=0; row<training_rows; row++)
     {       
@@ -222,9 +245,16 @@ var experiment = {
     $(".domain-plural").html(plural(domain(qNumber)));
     $(".domain-plural-caps").html(caps(plural(domain(qNumber))));
     $(".property").html(property(qNumber));
+
+    var total = 10;
+    $(".total").html(total);
     var cond = condition(qNumber);
     var utteranceType = cond[0];
-    var nPositiveExamples = cond[1];
+
+    var distribution = cond[1];
+    var nPositiveExamplesList = distributions[distribution];
+    var nPositiveExamples = nPositiveExamplesList[ (qNumber % nSet) - 1];
+
     var statement = utterance(utteranceType, wug, property(qNumber));
     if (statement) {
       $("#utterance").show();
@@ -241,6 +271,7 @@ var experiment = {
       property: property(qNumber),
       utteranceType: utteranceType,
       condition: cond,
+      distribution: distribution,
       nonceWord: wug,
       nPositiveExamples:nPositiveExamples,
       qType:"target"
@@ -270,7 +301,7 @@ var experiment = {
     }
 
     var nBins = 10;
-    var binWidth = 10;
+    var binWidth = Math.floor(total / nBins);
     var firstColWidth = 150;
     var otherColWidth = 100;
 
@@ -283,9 +314,16 @@ var experiment = {
       sliders += '<td rowspan="5" width="' + otherColWidth + '" align="center"><div class="slider" id="slider' + i + '"></div></td>';
         var low = i*binWidth;
         var high = (i+1)*binWidth;
+        if (binWidth == 1) {
+          var num = i+1;
+          var low = num;
+          var high = num;
+          ranges += '<td align="center" width="' + otherColWidth + '" margin="5px">' + num + ' out of ' + total + ' ' + plural(wug) + ' have ' + property(qNumber) + '</td>';
+        } else {
+          ranges += '<td align="center" width="' + otherColWidth + '" margin="5px">' + low + '-' + high + ' ' + plural(wug) + ' with ' + property(qNumber) + '</td>';
+        }
         lowers.push(low);
         uppers.push(high);
-        ranges += '<td align="center" width="' + otherColWidth + '" margin="5px">' + low + '-' + high + ' ' + plural(wug) + ' with ' + property(qNumber) + '</td>';
     }
     $("#sliderbins").html('<td height="68" width="' + firstColWidth + '">Extremely Likely</td>' + sliders);
     $("#ranges").html('<td width="' + firstColWidth + '"></td>' + ranges);

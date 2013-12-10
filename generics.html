@@ -22,7 +22,9 @@
   <br>
   <!-- <p id='logo-text'>Stanford Language and Cognition Lab</p> -->
   <p class="block-text">In this experiment, you will see some flora
-  and fauna from an imaginary alien planet and be asked some questions about
+    <span class="dom2">and</span>
+    <span class="dom1">or</span>
+  fauna from an imaginary alien planet and be asked some questions about
   their properties.</p>
   <p class="block-text">This experiment should take about 10 minutes to complete.</b></p> 
   <button type="button" onClick="this.blur(); experiment.trial(0)">Start</button>
@@ -46,7 +48,10 @@
 <div class="slide" id="intro">
   <br/>
   <p class="block-text"><span id="firstIntro">Imagine that you are an intern at a biological research institution on a newly discovered alien planet. You</span><span id="laterIntro">Now you</span> are trying to learn about the <b><span class="property">{{}}</span></b> of different kinds of <b><span class="domain-plural">{{}}</span></b> on this planet.</p>
-  <p class="block-text">You decide to go on an observational hike to the habitat of one kind of <span class="domain">{{}}</span> to study their <span class="property">{{}}</span>.</p>
+  <p class="block-text">You decide to go on
+      <span class="fam1">an observational hike to the habitat of one kind  of <span class="domain">{{}}</span></span>
+      <span class="fam2">a few observational hikes to the habitats of different kinds of <span class="domain-plural">{{}}</span></span>
+  to study their <span class="property">{{}}</span>.</p>
   <button type="button" class="continue">Continue</button>
 </div>
 
@@ -61,14 +66,14 @@
 
 <div class="slide" id="target">
   <br/>
-  <p class="center-text">You know about <b>one other kind of <span class="domain">{{}}</span></b>. <span class="domain-plural-caps"></span> of this kind are called <b><span class="wugs">{{}}</span></b>. But you haven't seen any <span class="wugs">{{}}</span> yet.</p>
+  <p class="center-text">You know about <b>one other kind of <span class="domain">{{}}</span></b>. <span class="domain-plural-caps"></span> of this <span class="fam2">last</span> kind are called <b><span class="wugs">{{}}</span></b>. But you haven't seen any <span class="wugs">{{}}</span> yet.</p>
   <div id="utterance">
     <p class="center-text">All you know about <span class="wugs">{{}}</span> is that your supervisor, who is an expert on the <span class="domain-plural">{{}}</span> on this planet, once told you,</p>
     <br/>
     <p><strong><font size="20"><span  id="statement">{{}}</span></font></strong></p>
     <br/>
   </div>
-  <p class="center-text">Imagine you saw 100 <span class="wugs">{{}}</span>. How many of those <span class="wugs">{{}}</span> would have <span class="property">{{}}</span>? Please rate how likely it that the number of <b><span class="wugs">{{}}</span></b> with <b><span class="property">{{}}</span></b> would be within each of the following ranges.</p>
+  <p class="center-text">Imagine you saw <span class="total">{{}}</span> <span class="wugs">{{}}</span>. How many of those <span class="wugs">{{}}</span> would have <span class="property">{{}}</span>? Please rate how likely it that the number of <b><span class="wugs">{{}}</span></b> with <b><span class="property">{{}}</span></b> would be within each of the following ranges.</p>
   <table>
     <tbody>
       <tr id="sliderbins"></tr>
