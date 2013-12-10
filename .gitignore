@@ -1,3 +1,18 @@
 MturkJSExperiments/sample-*
 ReferenceFiles/
 adjectives-2-2-13.R
+.RData
+.Rhistory
+Faces1/
+Faces2/
+README
+Scientific field studies.html
+Scientific field studies_files/
+*.png
+*.results
+*.input
+*.properties
+*.question
+*.success
+submiterator.py
+

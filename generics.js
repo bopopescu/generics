@@ -58,8 +58,8 @@ var conditions = shuffle([
 //************************************
 
 var nFamiliarizations = 1;//4;
-var training_rows = 4;
-var training_columns = 5;
+var training_rows = 2;
+var training_columns = 10;
 var nExamples = training_rows*training_columns; //per familirarization
 var nDomains = conditions.length//domains.length;
 var nSet = nFamiliarizations + 2; //a set consists of the intro, plus all familiarization trials for a domain, plus the target
@@ -192,7 +192,7 @@ var experiment = {
           prop0 = false;
           prop1 = hasProp[index];
         }
-        drawnObject = thing.draw("svg" + index, prop0, prop1, 0.5);
+        drawnObject = thing.draw("svg" + index, prop0, prop1, 0.45);
         trialData.drawnObjects[index] = drawnObject;
       }
     }
@@ -287,14 +287,14 @@ var experiment = {
         uppers.push(high);
         ranges += '<td align="center" width="' + otherColWidth + '" margin="5px">' + low + '-' + high + ' ' + plural(wug) + ' with ' + property(qNumber) + '</td>';
     }
-    $("#sliderbins").html('<td height="80" width="' + firstColWidth + '">Extremely Likely</td>' + sliders);
+    $("#sliderbins").html('<td height="68" width="' + firstColWidth + '">Extremely Likely</td>' + sliders);
     $("#ranges").html('<td width="' + firstColWidth + '"></td>' + ranges);
 
     trialData.lowers = lowers;
     trialData.uppers = uppers;
 
     for (var i=0; i<nBins; i++) {
-      $("#slider" + i).css({"height": 300, "width":12});
+      $("#slider" + i).css({"height": 260, "width":12});
       $("#slider" + i + " .ui-slider-handle").attr({"background": "#FAFAFA"});
       $('#slider' + i).slider({
         animate: true,
