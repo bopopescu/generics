@@ -314,14 +314,7 @@ var experiment = {
       sliders += '<td rowspan="5" width="' + otherColWidth + '" align="center"><div class="slider" id="slider' + i + '"></div></td>';
         var low = i*binWidth;
         var high = (i+1)*binWidth;
-        if (binWidth == 1) {
-          var num = i+1;
-          var low = num;
-          var high = num;
-          ranges += '<td align="center" width="' + otherColWidth + '" margin="5px">' + num + ' out of ' + total + ' ' + plural(wug) + ' have ' + property(qNumber) + '</td>';
-        } else {
-          ranges += '<td align="center" width="' + otherColWidth + '" margin="5px">' + low + '-' + high + ' ' + plural(wug) + ' with ' + property(qNumber) + '</td>';
-        }
+        ranges += '<td align="center" width="' + otherColWidth + '" margin="10px">' + low + '-' + high + ' ' + plural(wug) + ' with ' + property(qNumber) + '</td>';
         lowers.push(low);
         uppers.push(high);
     }
