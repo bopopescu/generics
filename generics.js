@@ -18,8 +18,6 @@ function utterance(utteranceType, wug, fur) {
   switch (utteranceType) {
     case "generic":
       return caps(plural(wug)) + " have " + fur;
-    case "specific":
-      return caps(wug) + " number 272 has " + fur;
     default:
       return("");
   }
@@ -38,19 +36,6 @@ var properties = {"tree":["berries", "leaves"],
                   "bird":["crests", "tails"],
                   "microbe":["spikes", "bumps"],
                   "fish":["fangs", "whiskers"]}
-var distBins = {
-  // These distributions are the number of tokens per type that have the target feature.
-  // Each distribution should have the same number of elements as the number of trainings_per_category above.
-  // The max value within each distribution is the product of training_rows and training_columns above.
-  beta: [0, .05, .95, 1],
-  binary: [0, 0, 1, 1],
-  uniform: [0, .33333, .66667, 1],
-  uniform_low: [0, .16667, .33333, .5]
-};
-console.log(distBins["beta"]);
-console.log(distBins["binary"]);
-console.log(distBins["uniform"]);
-console.log(distBins["uniform_low"]);
 
 //**********things that are randomized:
 var nonceWords = shuffle(["wug", "dax", "fep",
@@ -61,28 +46,46 @@ var nonceWords = shuffle(["wug", "dax", "fep",
                           "hife", "hett", "fraw", "fing", "fick",
                           "blim"]);
 var domains = shuffle(["tree", "flower", "monster", "bird", "microbe", "bug", "fish"])
-var utteranceTypes = shuffle(["generic", "none", "specific"]);
-var distributions = shuffle(["beta", "binary", "uniform", "uniform_low"]);
-var propertyIndices = shuffle([0, 1]);
-//var nonTargetProps = shuffle([true, false]);
-
-//random values that are constant throughout experiment:
-var domain = domains[0];
-var propertyIndex = propertyIndices[0];
-var property = properties[domain][propertyIndex];
-var utteranceType = utteranceTypes[0];
-var distribution = distributions[0];
-var nonTargetProp = false;//nonTargetProps[0];
+var propertyIndices = shuffle([0, 0, 0, 0, 1, 1, 1, 1]);
+var conditions = shuffle([
+  ["generic", 2],
+  ["generic", 10],
+  ["generic", 18],
+  ["none", 2],
+  ["none", 10],
+  ["none", 18]
+])
 //************************************
-console.log(domain);
 
-var nFamiliarizations = 4;
-var training_rows = 3;
+var nFamiliarizations = 1;//4;
+var training_rows = 4;
 var training_columns = 5;
 var nExamples = training_rows*training_columns; //per familirarization
-var nDomains = 1//domains.length;
-var nQs = nDomains*(nFamiliarizations+1);
-//var nSet = nFamiliarizations + 1; //a set consists of the intro, plus all familiarization trials for a domain, plus the target
+var nDomains = conditions.length//domains.length;
+var nSet = nFamiliarizations + 2; //a set consists of the intro, plus all familiarization trials for a domain, plus the target
+var nQs = nDomains*(nSet);
+
+var qNumbers = [];
+for (var i=0; i<nQs; i++) {
+  qNumbers.push(i);
+}
+
+function domain(qNumber) {
+  return domains[Math.floor(qNumber/nSet)];
+}
+
+function propertyIndex(qNumber) {
+  return propertyIndices[Math.floor(qNumber/nSet)];
+}
+
+function property(qNumber) {
+  var propList = properties[domain(Math.floor(qNumber))];
+  return propList[propertyIndex(qNumber)];
+}
+
+function condition(qNumber) {
+  return conditions[Math.floor(qNumber/nSet)];
+}
 
 $(document).ready(function() {
   showSlide("consent");
@@ -91,28 +94,32 @@ $(document).ready(function() {
 
 var experiment = {
   data: {
-    domain:domain,
-    fix:true,
-    property:property,
-    utteranceType:utteranceType,
+    domains:qNumbers.map(domain),
+    properties:qNumbers.map(property),
+    conditions:qNumbers.map(condition),
     nFamiliarizations:nFamiliarizations,
     nExamples:nExamples,
     nDomains:nDomains,
-    nonTargetProp:nonTargetProp,
-    distribution:distribution
   },
   
-  intro: function() {
-    $(".domain").html(domain);
-    $(".domain-plural").html(plural(domain));
-    $(".domain-plural-caps").html(caps(plural(domain)));
-    $(".property").html(property);
+  intro: function(qNumber) {
+    if (qNumber == 0) {
+      $("#firstIntro").show();
+      $("#laterIntro").hide();
+    } else {
+      $("#firstIntro").hide();
+      $("#laterIntro").show();
+    }
+    $(".domain").html(domain(qNumber));
+    $(".domain-plural").html(plural(domain(qNumber)));
+    $(".domain-plural-caps").html(caps(plural(domain(qNumber))));
+    $(".property").html(property(qNumber));
     if (turk.previewMode) {
       $("#intro #mustaccept").show();
     } else {
       showSlide("intro");
       $(".continue").click(function() { 
-        experiment.trial(0);
+        experiment.trial(qNumber + 1);
       })
     }
   },
@@ -125,12 +132,12 @@ var experiment = {
     $(".Wug").html(caps(wug));
     $(".wugs").html(plural(wug));
     $(".wug").html(wug);
-    $(".domain").html(domain);
-    $(".domain-plural").html(plural(domain));
-    $(".domain-plural-caps").html(caps(plural(domain)));
-    $(".property").html(property);
+    $(".domain").html(domain(qNumber));
+    $(".domain-plural").html(plural(domain(qNumber)));
+    $(".domain-plural-caps").html(caps(plural(domain(qNumber))));
+    $(".property").html(property(qNumber));
 
-    var Domain = constructor[domain];
+    var Domain = constructor[domain(qNumber)];
     var thing = new Domain();
 
     var training_html = "<center>";
@@ -147,15 +154,18 @@ var experiment = {
                 
     $("#examples").html(training_html);
 
-    var distBin = distBins[distribution][qNumber];
-    console.log(distBin);
-    var nPositiveExamples = Math.round(distBin*nExamples);
+    var nPositiveExamples = condition(qNumber)[1];
 
     var trialData = {
       nrow: training_rows,
       ncol: training_columns,
       drawnObjects: [],
+      condition: condition(qNumber),
+      domain: domain(qNumber),
+      property: property(qNumber),
       nPositiveExamples:nPositiveExamples,
+      nonceWord: wug,
+      utteranceType: condition(qNumber)[0],
       qType:"familiarization"
     }
 
@@ -175,12 +185,12 @@ var experiment = {
       for (var col=0; col<training_columns; col++)
       {
         var index = row*training_columns + col;
-        if (propertyIndex == 0) {
-          prop0 = hasProp[index]; //sample this!!!!
-          prop1 = nonTargetProp;
+        if (propertyIndex(qNumber) == 0) {
+          prop0 = hasProp[index];
+          prop1 = false;
         } else {
-          prop0 = nonTargetProp;
-          prop1 = hasProp[index]; //sample this!!!
+          prop0 = false;
+          prop1 = hasProp[index];
         }
         drawnObject = thing.draw("svg" + index, prop0, prop1, 0.5);
         trialData.drawnObjects[index] = drawnObject;
@@ -208,11 +218,14 @@ var experiment = {
     $(".Wug").html(caps(wug));
     $(".wugs").html(plural(wug));
     $(".wug").html(wug);
-    $(".domain").html(domain);
-    $(".domain-plural").html(plural(domain));
-    $(".domain-plural-caps").html(caps(plural(domain)));
-    $(".property").html(property);
-    var statement = utterance(utteranceType, wug, property);
+    $(".domain").html(domain(qNumber));
+    $(".domain-plural").html(plural(domain(qNumber)));
+    $(".domain-plural-caps").html(caps(plural(domain(qNumber))));
+    $(".property").html(property(qNumber));
+    var cond = condition(qNumber);
+    var utteranceType = cond[0];
+    var nPositiveExamples = cond[1];
+    var statement = utterance(utteranceType, wug, property(qNumber));
     if (statement) {
       $("#utterance").show();
       $("#statement").html('"' + statement + '."');
@@ -224,6 +237,12 @@ var experiment = {
 
     var trialData = {
       responses:[],
+      domain: domain(qNumber),
+      property: property(qNumber),
+      utteranceType: utteranceType,
+      condition: cond,
+      nonceWord: wug,
+      nPositiveExamples:nPositiveExamples,
       qType:"target"
     };
 
@@ -266,7 +285,7 @@ var experiment = {
         var high = (i+1)*binWidth;
         lowers.push(low);
         uppers.push(high);
-        ranges += '<td align="center" width="' + otherColWidth + '" margin="5px">' + low + '-' + high + ' ' + plural(wug) + ' with ' + property + '</td>';
+        ranges += '<td align="center" width="' + otherColWidth + '" margin="5px">' + low + '-' + high + ' ' + plural(wug) + ' with ' + property(qNumber) + '</td>';
     }
     $("#sliderbins").html('<td height="80" width="' + firstColWidth + '">Extremely Likely</td>' + sliders);
     $("#ranges").html('<td width="' + firstColWidth + '"></td>' + ranges);
@@ -304,7 +323,9 @@ var experiment = {
 
   trial: function(qNumber) {
     $('.bar').css('width', ( (qNumber / nQs)*100 + "%"));
-    if (qNumber % (nFamiliarizations+1) == nFamiliarizations) {
+    if (qNumber % nSet == 0) {
+      experiment.intro(qNumber);
+    } else if (qNumber % nSet == (nSet-1)) {
       experiment.target(qNumber);
     } else {
       experiment.familiarization(qNumber);
