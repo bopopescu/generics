@@ -58,8 +58,8 @@ var conditions = shuffle([
 //************************************
 
 var nFamiliarizations = 1;//4;
-var training_rows = 2;
-var training_columns = 10;
+var training_rows = 4;
+var training_columns = 5;
 var nExamples = training_rows*training_columns; //per familirarization
 var nDomains = conditions.length//domains.length;
 var nSet = nFamiliarizations + 2; //a set consists of the intro, plus all familiarization trials for a domain, plus the target
