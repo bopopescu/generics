@@ -1,5 +1,3 @@
-
-
 function caps(a) {return a.substring(0,1).toUpperCase() + a.substring(1,a.length);}
 function uniform(a, b) { return ( (Math.random()*(b-a))+a ); }
 function showSlide(id) { $(".slide").hide(); $("#"+id).show(); }
@@ -18,6 +16,8 @@ function utterance(utteranceType, wug, fur) {
   switch (utteranceType) {
     case "generic":
       return caps(plural(wug)) + " have " + fur;
+    case "question-generic":
+      return "Do " + plural(wug) + " have " + fur + "?";
     default:
       return("");
   }
@@ -35,41 +35,49 @@ var properties = {"tree":["berries", "leaves"],
                   "bug":["wings", "antennae"],
                   "bird":["crests", "tails"],
                   "microbe":["spikes", "bumps"],
-                  "fish":["fangs", "whiskers"]}
+                  "fish":["fangs", "whiskers"]};
 var distributions = {
   "2":[2],
   "10":[10],
   "18":[18],
-  "foo":shuffle([1,2,3])
+  "foo":shuffle([1,2,3]),
+  "non":[]
 };
 
 
 //**********things that are randomized:
 var nonceWords = shuffle(["wug", "dax", "fep", "tig", "speff",
-                          "zib", "gub",
+                          "zib", "gub", "dob", "fid", "baw",
                           "wost", "wock", "thog", "snim", "ript",
                           "quog", "polt", "poch", "murp", "mulb",
                           "mork", "mopt", "monx", "mone", "moge",
                           "lide", "hoil", "hoff", "hisp", "hinx",
                           "hife", "hett", "fraw", "fing", "fick",
                           "blim", "zop", "blick"]);
-var domains = shuffle(["tree", "flower", "monster", "bird", "microbe", "bug", "fish"])
+var domains = shuffle(["tree", "flower", "monster", "bird", "microbe", "bug", "fish"]);
 var propertyIndices = shuffle([0, 0, 0, 0, 1, 1, 1, 1]);
 var conditions = shuffle([
-  ["generic", "2"],
-  ["generic", "10"],
-  ["generic", "18"],
-  ["none", "2"],
-  ["none", "10"],
-  ["none", "18"]
-])
+  /*["question-generic", "2", "none"],
+  ["question-generic", "10", "none"],
+  ["question-generic", "18", "none"],*/
+  ["question-generic", "2", "2"],
+  ["question-generic", "10", "2"],
+  ["question-generic", "18", "2"],
+  ["question-generic", "2", "10"],
+  ["question-generic", "10", "10"],
+  ["question-generic", "18", "10"],
+  ["question-generic", "2", "18"],
+  ["question-generic", "10", "18"],
+  ["question-generic", "18", "18"]
+]);
 //************************************
 
 var nFamiliarizations = 1;//4;
-var training_rows = 4;
-var training_columns = 5;
+var training_rows = 2;
+var training_columns = 10;
+var scale = 0.4;
 var nExamples = training_rows*training_columns; //per familirarization
-var nDomains = conditions.length//domains.length;
+var nDomains = conditions.length;//domains.length;
 var nSet = nFamiliarizations + 2; //a set consists of the intro, plus all familiarization trials for a domain, plus the target
 var nQs = nDomains*(nSet);
 
@@ -79,11 +87,11 @@ for (var i=0; i<nQs; i++) {
 }
 
 function domain(qNumber) {
-  return domains[Math.floor(qNumber/nSet)];
+  return domains[Math.floor((qNumber/nSet)) % domains.length];
 }
 
 function propertyIndex(qNumber) {
-  return propertyIndices[Math.floor(qNumber/nSet)];
+  return propertyIndices[Math.floor((qNumber/nSet)) % propertyIndices.length];
 }
 
 function property(qNumber) {
@@ -92,7 +100,7 @@ function property(qNumber) {
 }
 
 function condition(qNumber) {
-  return conditions[Math.floor(qNumber/nSet)];
+  return conditions[Math.floor(qNumber/nSet) % conditions.length];
 }
 
 $(document).ready(function() {
@@ -215,7 +223,7 @@ var experiment = {
           prop0 = false;
           prop1 = hasProp[index];
         }
-        drawnObject = thing.draw("svg" + index, prop0, prop1, 0.45);
+        drawnObject = thing.draw("svg" + index, prop0, prop1, scale);
         trialData.drawnObjects[index] = drawnObject;
       }
     }
@@ -246,14 +254,85 @@ var experiment = {
     $(".domain-plural-caps").html(caps(plural(domain(qNumber))));
     $(".property").html(property(qNumber));
 
-    var total = 10;
-    $(".total").html(total);
     var cond = condition(qNumber);
     var utteranceType = cond[0];
 
     var distribution = cond[1];
-    var nPositiveExamplesList = distributions[distribution];
-    var nPositiveExamples = nPositiveExamplesList[ (qNumber % nSet) - 1];
+
+    var trialData = {
+      responses:[],
+      domain: domain(qNumber),
+      property: property(qNumber),
+      utteranceType: utteranceType,
+      condition: cond,
+      distribution: distribution,
+      nonceWord: wug,
+      drawnObjects: [],
+      responses: [],
+      qType:"target"
+    };
+
+    var categoryMeans = "";
+
+    var lastDist = cond[2];
+    if (lastDist == "none") {
+      $(".have-seen").hide();
+      $(".have-not-seen").show();
+      var nPositiveExamples = 0;
+      var haveSeen = false;
+    } else {
+      $(".have-seen").show();
+      $(".have-not-seen").hide();
+      var nPositiveExamplesList = distributions[lastDist];
+      var nPositiveExamples = nPositiveExamplesList[0];
+      var haveSeen = true;
+
+      //Draw examples
+      var Domain = constructor[domain(qNumber)];
+      var thing = new Domain();
+
+      var target_html = "<center>";
+      for (var row=0;row<training_rows;row++)
+      {       
+        for (var col=0;col<training_columns;col++)
+        {
+          var index = row*training_columns + col;
+          target_html += '<svg id="targetSvg' + index + '"></svg>'
+        }
+        target_html += "<br/>";
+      }
+      target_html += "</center>";
+                  
+      $("#targetExamples").html(target_html)
+
+      var hasProp = [];
+      for (var i=0; i<nPositiveExamples; i++) {
+        hasProp.push(true);
+      }
+      for (var i=nPositiveExamples; i<nExamples; i++) {
+        hasProp.push(false);
+      }
+      var hasProp = shuffle(hasProp);
+
+      for (var row=0; row<training_rows; row++)
+      {       
+        for (var col=0; col<training_columns; col++)
+        {
+          var index = row*training_columns + col;
+          if (propertyIndex(qNumber) == 0) {
+            prop0 = hasProp[index];
+            prop1 = false;
+          } else {
+            prop0 = false;
+            prop1 = hasProp[index];
+          }
+          drawnObject = thing.draw("targetSvg" + index, prop0, prop1, scale);
+          trialData.drawnObjects[index] = drawnObject;
+        }
+      }
+
+      categoryMeans = JSON.stringify(thing);
+    }
 
     var statement = utterance(utteranceType, wug, property(qNumber));
     if (statement) {
@@ -265,17 +344,9 @@ var experiment = {
 
     var nResponses = 0;
 
-    var trialData = {
-      responses:[],
-      domain: domain(qNumber),
-      property: property(qNumber),
-      utteranceType: utteranceType,
-      condition: cond,
-      distribution: distribution,
-      nonceWord: wug,
-      nPositiveExamples:nPositiveExamples,
-      qType:"target"
-    };
+    trialData.nPositiveExamples = nPositiveExamples;
+    trialData.categoryMeans = categoryMeans;
+    trialData.haveSeen = haveSeen;
 
     function changeCreator(i) {
       return function(value) {
@@ -300,44 +371,19 @@ var experiment = {
       }
     }
 
-    var nBins = 10;
-    var binWidth = Math.floor(total / nBins);
-    var firstColWidth = 150;
-    var otherColWidth = 100;
-
-    var lowers = [];
-    var uppers = [];
-    var sliders = "";
-    var ranges = "";
-
-    for (var i=0; i<nBins; i++) {
-      sliders += '<td rowspan="5" width="' + otherColWidth + '" align="center"><div class="slider" id="slider' + i + '"></div></td>';
-        var low = i*binWidth;
-        var high = (i+1)*binWidth;
-        ranges += '<td align="center" width="' + otherColWidth + '" margin="10px">' + low + '-' + high + ' ' + plural(wug) + ' with ' + property(qNumber) + '</td>';
-        lowers.push(low);
-        uppers.push(high);
-    }
-    $("#sliderbins").html('<td height="68" width="' + firstColWidth + '">Extremely Likely</td>' + sliders);
-    $("#ranges").html('<td width="' + firstColWidth + '"></td>' + ranges);
-
-    trialData.lowers = lowers;
-    trialData.uppers = uppers;
-
-    for (var i=0; i<nBins; i++) {
-      $("#slider" + i).css({"height": 260, "width":12});
-      $("#slider" + i + " .ui-slider-handle").attr({"background": "#FAFAFA"});
-      $('#slider' + i).slider({
-        animate: true,
-        orientation: "vertical",
-        max: 1 , min: 0, step: 0.01, value: 0.5,
-        slide: slideCreator(i),
-        change: changeCreator(i)
-      });
-    }
+    $("#sliders").html('<div class="slider" id="slider0"></div>');
+    $("#slider0").css({"height": 12, "width":800});
+    $("#slider0 .ui-slider-handle").attr({"background": "#FAFAFA"});
+    $('#slider0').slider({
+      animate: true,
+      orientation: "horizontal",
+      max: 1 , min: 0, step: 0.01, value: 0.5,
+      slide: slideCreator(0),
+      change: changeCreator(0)
+    });
 
     $(".continue").click(function() {
-      if (nResponses < nBins) {
+      if (nResponses < 1) {
         $(".err").show();
       } else {
         $(".continue").unbind("click");

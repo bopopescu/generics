@@ -66,25 +66,32 @@
 
 <div class="slide" id="target">
   <br/>
-  <p class="center-text">You know about <b>one other kind of <span class="domain">{{}}</span></b>. <span class="domain-plural-caps"></span> of this <span class="fam2">last</span> kind are called <b><span class="wugs">{{}}</span></b>. But you haven't seen any <span class="wugs">{{}}</span> yet.</p>
+  <p class="center-text">You know about <b>one other kind of <span class="domain">{{}}</span></b>. <span class="domain-plural-caps"></span> of this <span class="fam2">last</span> kind are called <b><span class="wugs">{{}}</span></b>.
+    <span class="have-not-seen">But you haven't seen any <span class="wugs">{{}}</span> yet. Please give us your best guess about the answer to the question:</span>
+    <span class="have-seen">Here are all the <span class="wugs">{{}}</span> that you've seen.</span></p>
+  <div class="have-seen" id="targetExamples"></div>
   <div id="utterance">
-    <p class="center-text">All you know about <span class="wugs">{{}}</span> is that your supervisor, who is an expert on the <span class="domain-plural">{{}}</span> on this planet, once told you,</p>
-    <br/>
     <p><strong><font size="20"><span  id="statement">{{}}</span></font></strong></p>
     <br/>
   </div>
-  <p class="center-text">Imagine you saw <span class="total">{{}}</span> <span class="wugs">{{}}</span>. How many of those <span class="wugs">{{}}</span> would have <span class="property">{{}}</span>? Please rate how likely you think it is that the number of <b><span class="wugs">{{}}</span></b> with <b><span class="property">{{}}</span></b> would be within each of the following ranges.</p>
-  <table>
+  <table align="center">
     <tbody>
-      <tr id="sliderbins"></tr>
-      <tr><td height="60">Very Likely</td></tr>
-      <tr><td height="60">Neutral</td></tr><tr>
-      <td height="60">Not Very Likely</td></tr>
-      <tr><td height="60">Extremely Unlikely</td>
-      </tr><tr id="ranges"></tr>
+      <tr>
+        <td colspan="7" align="center" id="sliders">
+        </td>
+      </tr>
+      <tr>
+        <td width="130" margin="10" align="center">Definitely No</td>
+        <td width="130" margin="10" align="center">Probably No</td>
+        <td width="130" margin="10" align="center">Leaning Towards No</td>
+        <td width="130" margin="10" align="center">Don't Know</td>
+        <td width="130" margin="10" align="center">Leaning Towards Yes</td>
+        <td width="130" margin="10" align="center">Probably Yes</td>
+        <td width="130" margin="10" align="center">Definitely Yes</td>
+      </tr>
     </tbody>
   </table>
-  <p class="err">Please make sure to adjust all the sliders before continuing (or tap the slider if you think it's already in the right position).</p>
+  <p class="err">Please make sure to adjust the slider before continuing (or tap the slider if you think it's already in the right position).</p>
   <button type="button" class="continue">Continue</button>
 </div>
 
