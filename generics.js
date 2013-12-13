@@ -15,7 +15,7 @@ function plural(word) {
 function utterance(utteranceType, wug, fur) {
   switch (utteranceType) {
     case "generic":
-      return caps(plural(wug)) + " have " + fur;
+      return caps(plural(wug)) + " have " + fur + ".";
     case "question-generic":
       return "Do " + plural(wug) + " have " + fur + "?";
     default:
@@ -333,7 +333,7 @@ var experiment = {
     var statement = utterance(utteranceType, wug, property(qNumber));
     if (statement) {
       $("#utterance").show();
-      $("#statement").html('"' + statement + '."');
+      $("#statement").html('"' + statement + '"');
     } else {
       $("#utterance").hide();
     }
