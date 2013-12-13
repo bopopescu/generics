@@ -41,7 +41,9 @@ var distributions = {
   "10":[10],
   "18":[18],
   "foo":shuffle([1,2,3]),
-  "non":[]
+  "none":[],
+  "low":shuffle([0,0,2,4]),
+  "high":shuffle([20,20,18,16])
 };
 
 
@@ -57,22 +59,16 @@ var nonceWords = shuffle(["wug", "dax", "fep", "tig", "speff",
 var domains = shuffle(["tree", "flower", "monster", "bird", "microbe", "bug", "fish"]);
 var propertyIndices = shuffle([0, 0, 0, 0, 1, 1, 1, 1]);
 var conditions = shuffle([
-  /*["question-generic", "2", "none"],
-  ["question-generic", "10", "none"],
-  ["question-generic", "18", "none"],*/
-  ["question-generic", "2", "2"],
-  ["question-generic", "10", "2"],
-  ["question-generic", "18", "2"],
-  ["question-generic", "2", "10"],
-  ["question-generic", "10", "10"],
-  ["question-generic", "18", "10"],
-  ["question-generic", "2", "18"],
-  ["question-generic", "10", "18"],
-  ["question-generic", "18", "18"]
+  ["question-generic", "low", "2"],
+  ["question-generic", "low", "10"],
+  ["question-generic", "low", "18"],
+  ["question-generic", "high", "2"],
+  ["question-generic", "high", "10"],
+  ["question-generic", "high", "18"]
 ]);
 //************************************
 
-var nFamiliarizations = 1;//4;
+var nFamiliarizations = 4;//4;
 var training_rows = 2;
 var training_columns = 10;
 var scale = 0.4;
