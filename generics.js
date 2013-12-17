@@ -45,11 +45,19 @@ var distributions = {
   "low":shuffle([0,0,2,4]),
   "high":shuffle([20,20,18,16])
 };
-
+function singular(property) {
+  if (property == "tails") {
+    return "a tail";
+  } else if (property == "crests") {
+    return "a crest";
+  } else {
+    return property;
+  }
+}
 
 //**********things that are randomized:
 var nonceWords = shuffle(["wug", "dax", "fep", "tig", "speff",
-                          "zib", "gub", "dob", "fid", "baw",
+                          "zid", "gub", "dob", "mib", "baw",
                           "wost", "wock", "thog", "snim", "ript",
                           "quog", "polt", "poch", "murp", "mulb",
                           "mork", "mopt", "monx", "mone", "moge",
@@ -59,16 +67,14 @@ var nonceWords = shuffle(["wug", "dax", "fep", "tig", "speff",
 var domains = shuffle(["tree", "flower", "monster", "bird", "microbe", "bug", "fish"]);
 var propertyIndices = shuffle([0, 0, 0, 0, 1, 1, 1, 1]);
 var conditions = shuffle([
-  ["question-generic", "low", "2"],
-  ["question-generic", "low", "10"],
-  ["question-generic", "low", "18"],
-  ["question-generic", "high", "2"],
-  ["question-generic", "high", "10"],
-  ["question-generic", "high", "18"]
+  ["generic", "low"],
+  ["none", "low"],
+  ["generic", "high"],
+  ["none", "high"]
 ]);
 //************************************
 
-var nFamiliarizations = 4;//4;
+var nFamiliarizations = distributions[conditions[0][1]].length;//4;
 var training_rows = 2;
 var training_columns = 10;
 var scale = 0.4;
@@ -249,6 +255,7 @@ var experiment = {
     $(".domain-plural").html(plural(domain(qNumber)));
     $(".domain-plural-caps").html(caps(plural(domain(qNumber))));
     $(".property").html(property(qNumber));
+    $(".property-singular").html(singular(property(qNumber)));
 
     var cond = condition(qNumber);
     var utteranceType = cond[0];
@@ -268,7 +275,7 @@ var experiment = {
       qType:"target"
     };
 
-    var categoryMeans = "";
+/*    var categoryMeans = "";
 
     var lastDist = cond[2];
     if (lastDist == "none") {
@@ -328,7 +335,7 @@ var experiment = {
       }
 
       categoryMeans = JSON.stringify(thing);
-    }
+    }*/
 
     var statement = utterance(utteranceType, wug, property(qNumber));
     if (statement) {
@@ -340,9 +347,9 @@ var experiment = {
 
     var nResponses = 0;
 
-    trialData.nPositiveExamples = nPositiveExamples;
+/*    trialData.nPositiveExamples = nPositiveExamples;
     trialData.categoryMeans = categoryMeans;
-    trialData.haveSeen = haveSeen;
+    trialData.haveSeen = haveSeen;*/
 
     function changeCreator(i) {
       return function(value) {
