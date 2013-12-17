@@ -132,6 +132,7 @@ var experiment = {
     nFamiliarizations:nFamiliarizations,
     nExamples:nExamples,
     nDomains:nDomains,
+    verion:"12-17"
   },
   
   intro: function(qNumber) {
