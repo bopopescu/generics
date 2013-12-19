@@ -87,7 +87,7 @@ var conditions = shuffle([
   ["generic", "low"],
   ["none", "low"],
   ["generic", "high"],
-  ["none", "high"]
+  ["none", "high"],
   ["neg", "low"],
   ["neg", "high"],
 ]);
