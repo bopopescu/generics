@@ -18,6 +18,8 @@ function getUtterance(utteranceType, wug, fur) {
       return caps(plural(wug)) + " have " + fur + ".";
     case "question-generic":
       return "Do " + plural(wug) + " have " + fur + "?";
+    case "neg":
+      return caps(plural(wug)) + " don't have " + fur + ".";
     default:
       return("");
   }
@@ -86,6 +88,8 @@ var conditions = shuffle([
   ["none", "low"],
   ["generic", "high"],
   ["none", "high"]
+  ["neg", "low"],
+  ["neg", "high"],
 ]);
 var names = {
   girl: shuffle(["Anna", "Beth", "Carey", "Danielle", "Erica", "Sally"]),
