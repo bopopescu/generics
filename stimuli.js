@@ -350,12 +350,19 @@ var Stimuli = {
      o     leaves (string) same as input parameter,
      o }
     \*/
-    this.draw = function(label, berries, leaves, scaleFactor) {
+    this.draw = function(label, berries, leaves, scaleFactor, params) {
       var w = StimuliTools.uniformAroundMean(this.width, this.widthVar);
       var h = StimuliTools.uniformAroundMean(this.height, this.heightVar);
       var trunkColor = Stimuli.myColor(this.trunkColor, this.trunkColorVar);
       var leafColor = Stimuli.myColor(this.leafColor, this.leafColorVar);
       var berryColor = Stimuli.myColor(this.berryColor, this.berryColorVar);
+      if (params != null) {
+        w = params.width;
+        h = params.height;
+        trunkColor = params.trunkColor;
+        leafColor = params.leafColor;
+        berryColor = params.berryColor;
+      }
       var widthFactor = w * 1.5 + 0.7;
       var heightFactor = h + 0.7;
       //this is badly names, this is actually a deterministic function of w, which was randomly generated
@@ -724,17 +731,24 @@ var Stimuli = {
      o     antennae (string) same as input parameter,
      o }
     \*/
-    this.draw = function(label, wings, antennae, scaleFactor) {
+    this.draw = function(label, wings, antennae, scaleFactor, params) {
       var bodyFatness = StimuliTools.uniformAroundMean(this.bodyFatness, this.bodyFatnessVar);
       var headFatness = StimuliTools.uniformAroundMean(this.headFatness, this.headFatnessVar);
-      var headYRadius = (headFatness)*60 + 15;
       var headXRadius = 25;
-      var bodyYRadius = (bodyFatness)*60 + 10;
       var bodyXRadius = 50;
       var paper = Raphael(label, Stimuli.containerWidth, Stimuli.containerHeight);
       var bodyColor = Stimuli.myColor(this.bodyColor, this.bodyColorVar);
       var wingsColor = Stimuli.myColor(this.wingsColor, this.wingsColorVar);
       var antennaeColor = Stimuli.myColor(this.antennaeColor, this.antennaeColorVar);
+      if (params != null) {
+        bodyColor = params.bodyColor;
+        wingsColor = params.wingsColor;
+        antennaeColor = params.antennaeColor;
+        bodyFatness = params.bodyFatness;
+        headFatness = params.headFatness;
+      }
+      var headYRadius = (headFatness)*60 + 15;
+      var bodyYRadius = (bodyFatness)*60 + 10;
 
       function drawEyes() {
         var eyeRadius = 10;
@@ -981,14 +995,23 @@ var Stimuli = {
      o     tail (string) same as input parameter,
      o }
     \*/
-    this.draw = function(label, crestlalala, taillalala, scaleFactor) {
+    this.draw = function(label, crestlalala, taillalala, scaleFactor, params) {
       var paper = Raphael(label, Stimuli.containerWidth, Stimuli.containerHeight);
       var color = Stimuli.myColor(this.color, this.colorVar);
       var crestColor = Stimuli.myColor(this.crestColor, this.crestColorVar);
       var tailColor = Stimuli.myColor(this.tailColor, this.tailColorVar);
+      var bodyStretch = StimuliTools.uniformAroundMean(this.bodyStretch, this.bodyStretchVar);
+      var headStretch = StimuliTools.uniformAroundMean(this.headStretch, this.headStretchVar);
+      if (params != null) {
+        color = params.color;
+        crestColor = params.crestColor;
+        tailColor = params.tailColor;
+        bodyStretch = params.bodyStretch;
+        headStretch = params.headStretch;
+      }
       var gradColor = Stimuli.makeGradient("r",color);
-      var bodyStretch = StimuliTools.uniformAroundMean(this.bodyStretch, this.bodyStretchVar) * 1 + 0.5;
-      var headStretch = StimuliTools.uniformAroundMean(this.headStretch, this.headStretchVar) * 2 + .7;
+      var bodyStretch = bodyStretch * 1 + 0.5;
+      var headStretch = headStretch * 2 + .7;
       function drawHead() {
         var headCenter = [paperCenter[0], paperCenter[1]-35];
         var head = paper.ellipse(headCenter[0], headCenter[1], 25*headStretch, 25);
@@ -1175,13 +1198,20 @@ var Stimuli = {
      o     bumps (string) same as input parameter,
      o }
     \*/
-    this.draw = function(label, spikes, bumps, scaleFactor) {
+    this.draw = function(label, spikes, bumps, scaleFactor, params) {
       var paper = Raphael(label, Stimuli.containerWidth, Stimuli.containerHeight);
       var color = Stimuli.myColor(this.color, this.colorVar);
       var bumpsColor = Stimuli.myColor(this.bumpsColor, this.bumpsColorVar);
       var spikesColor = Stimuli.myColor(this.spikesColor, this.spikesColorVar);
       var xRadius = StimuliTools.uniformAroundMean(this.xRadius, this.xRadiusVar);
       var yRadius = StimuliTools.uniformAroundMean(this.yRadius, this.yRadiusVar);
+      if (params != null) {
+        color = params.color;
+        bumpsColor = params.bumpsColor;
+        spikesColor = params.spikesColor;
+        xRadius = params.xRadius;
+        yRadius = params.yRadius;
+      }
       var xRad = getRadius(xRadius);
       var yRad = getRadius(yRadius);
       function getRadius(r) {
@@ -1400,12 +1430,18 @@ var Stimuli = {
      o     teeth (string) same as input parameter,
      o }
     \*/
-    this.draw = function(label, horns, teeth, scaleFactor) {
+    this.draw = function(label, horns, teeth, scaleFactor, params) {
       var paper = Raphael(label, Stimuli.containerWidth, Stimuli.containerHeight);
       var tallness = StimuliTools.uniformAroundMean(this.tallness, this.tallnessVar);
       var fatness = StimuliTools.uniformAroundMean(this.fatness, this.fatnessVar);
       var color = Stimuli.myColor(this.color, this.colorVar);
       var accentColor = Stimuli.myColor(this.accentColor, this.accentColorVar);
+      if (params != null) {
+        tallness = params.tallness;
+        fatness = params.fatness;
+        color = params.color;
+        accentColor = params.accentColor;
+      }
       var lightAccent = Stimuli.lighten(accentColor, true);
       var colors = {"left eye": "#ffffff",
                     "left pupil": "#000000",
@@ -1586,12 +1622,18 @@ var Stimuli = {
      o     whiskers (string) same as input parameter,
      o }
     \*/
-    this.draw = function(label, fangs, whiskers, scaleFactor) {
+    this.draw = function(label, fangs, whiskers, scaleFactor, params) {
       var paper = Raphael(label, Stimuli.containerWidth, Stimuli.containerHeight);
       var tailSize = StimuliTools.uniformAroundMean(this.tailSize, this.tailSizeVar);
       var tallness = StimuliTools.uniformAroundMean(this.tallness, this.tallnessVar);
       var color = Stimuli.myColor(this.color, this.colorVar);
       var finColor = Stimuli.myColor(this.finColor, this.finColorVar);
+      if (params != null) {
+        tailSize = params.tailSize;
+        tallness = params.tallness;
+        color = params.color;
+        finColor = params.finColor;
+      }
       var gradColor = Stimuli.makeGradient("r", color);
       var colors = {"eye": "#ffffff",
                     "pupil": "#000000",
@@ -1774,7 +1816,7 @@ var Stimuli = {
      o     thorns (string) same as input parameter,
      o }
     \*/
-    this.draw = function(label, spots, thorns, scaleFactor) {
+    this.draw = function(label, spots, thorns, scaleFactor, params) {
       var paper = Raphael(label, Stimuli.containerWidth, Stimuli.containerHeight);
       
       var petalColor = Stimuli.myColor(this.petalColor, this.petalColorVar);
@@ -1783,6 +1825,14 @@ var Stimuli = {
       var stemColor = Stimuli.myColor(this.stemColor, this.stemColorVar);
       var centerSize = StimuliTools.uniformAroundMean(this.centerSize, this.centerSizeVar);
       var petalLength = StimuliTools.uniformAroundMean(this.petalLength, this.petalLengthVar);
+      if (params != null) {
+        petalColor = params.petalColor;
+        centerColor = params.centerColor;
+        spotsColor = params.spotsColor;
+        stemColor = params.stemColor;
+        centerSize = params.centerSize;
+        petalLength = params.petalLength;
+      }
       
       var colors = {"stem":stemColor,
                     "thorny stem":stemColor,
@@ -1992,13 +2042,20 @@ var Stimuli = {
      o     streaks (string) same as input parameter,
      o }
     \*/
-    this.draw = function(label, bubbles, streaks, scaleFactor) {
+    this.draw = function(label, bubbles, streaks, scaleFactor, params) {
       var paper = Raphael(label, Stimuli.containerWidth, Stimuli.containerHeight);
       var color = Stimuli.myColor(this.color, this.colorVar);
       var bubblesColor = Stimuli.myColor(this.bubblesColor, this.bubblesColorVar);
       var streaksColor = Stimuli.myColor(this.streaksColor, this.streaksColorVar);
       var centerSize = StimuliTools.uniformAroundMean(this.centerSize, this.centerSizeVar);
       var outsideSize = StimuliTools.uniformAroundMean(this.outsideSize, this.outsideSizeVar);
+      if (params != null) {
+        color = params.color;
+        bubblesColor = params.bubblesColor;
+        streaksColor = params.streaksColor;
+        centerSize = params.centerSize;
+        outsideSize = params.outsideSize;
+      }
       var getPathString = function(p) {
         var ss = endpoints.smallSmall[p];
         var sb = endpoints.smallBig[p];

@@ -27,7 +27,7 @@
   fauna from an imaginary alien planet and be asked some questions about
   their properties.</p>
   <p class="block-text">This experiment should take about 10 minutes to complete.</b></p> 
-  <button type="button" onClick="this.blur(); experiment.trial(0)">Start</button>
+  <button type="button" onClick="this.blur(); experiment.trial(0, {type:'new'})">Start</button>
   <p class="block-text">(Note: you won't be able to preview this HIT before
   accepting it because it's so short.)</p>
   <p class="block-text" id="mustaccept"> You must accept the HIT in order to
@@ -47,50 +47,70 @@
 
 <div class="slide" id="intro">
   <br/>
-  <p class="block-text"><span id="firstIntro">Imagine that you are an intern at a biological research institution on a newly discovered alien planet. You</span><span id="laterIntro">Now you</span> are trying to learn about the <b><span class="property">{{}}</span></b> of different kinds of <b><span class="domain-plural">{{}}</span></b> on this planet.</p>
-  <p class="block-text">You decide to go on
-      <span class="fam1">an observational hike to the habitat of one kind  of <span class="domain">{{}}</span></span>
-      <span class="fam2">a few observational hikes to the habitats of different kinds of <span class="domain-plural">{{}}</span></span>
-  to study their <span class="property">{{}}</span>.</p>
+  <p class="block-text"><span id="firstIntro"><span class="name">{{}}</span> is an intern at a biological research institution on a newly discovered alien planet. <span class="he-caps">{{}}</span></span><span id="laterIntro">Next <span class="name">{{}}</span></span> is trying to learn about the <b><span class="property">{{}}</span></b> of different kinds of <b><span class="domain-plural">{{}}</span></b> on this planet.</p>
+  <p class="block-text"><span class="he-caps">{{}}</span> decides to go on a few observational hikes to the habitats of different kinds of <span class="domain-plural">{{}}</span></span> to study their <span class="property">{{}}</span>. As <span class="he">{{}}</span> studies these <span class="domain-plural">{{}}</span>, <span class="he">{{}}</span> will record them in <span class="his">{{}}</span> notebook.</p>
   <button type="button" class="continue">Continue</button>
 </div>
 
-<div class="slide" id="familiarization">
+<div class="slide" id="trial">
   <br/>
-  <p class="block-text">You go to the habitat of a kind of <span class="domain">{{}}</span> called <b><span class="wugs">{{}}</span></b>. Here are the <span class="wugs">{{}}</span> that you see:</p>
-  <div id="examples"></div>
+  <table align="center"><tbody><tr>
+  <td width="500">
+    <div id="familiarization">
+      <p class="block-text"><span class="name">{{}}</span> goes to the habitat of a kind of <span class="domain">{{}}</span> called <b><span class="wugs">{{}}</span></b>. Here are the <span class="wugs">{{}}</span> that <span class="he">{{}}</span> sees:</p>
+      <div id="examples"></div>
+      <br/>
+      <p class="block-text">Please study the <b><span class="wugs">{{}}</span></b> and their <b><span class="property">{{}}</span></b> (if they have any) before going on.</p>
+    </div>
+    <div id="target">
+      <p class="center-text"><span class="name">{{}}</span> knows about <b>one other kind of <span class="domain">{{}}</span></b>. <span class="domain-plural-caps"></span> of this <span class="fam2">last</span> kind are called <b><span class="wugs">{{}}</span></b>.
+      <span class="have-not-seen">But <span class="name">{{}}</span> hasn't seen any <span class="wugs">{{}}</span> yet.</span>
+      <br/>
+      <br/>
+      <div id="utterance">
+        <p class="center-text"><span class="name">{{}}</span> shows <span class="his">{{}}</span> supervisor, Scientist <span class="sci-name">{{}}</span>, <span class="his">{{}}</span> notebook. Scientist <span class="sci-name">{{}}</span> is an expert on the <span class="domain">{{}}</span> of this planet. <span class="sci-he-caps">{{}}</span> reads through <span class="pos">{{}}</span> notes and then points to the <span class="wugs">{{}}</span> entry and tells <span class="name">{{}}</span>:
+        <br/>
+        <br/>
+        <p class="center-text"><strong><font size="20"><span  id="statement">{{}}</span></font></strong></p>
+        <br/>
+      </div>
+      <p class="center-text"><span class="name">{{}}</span> will go on another hike to the <span class="wugs">{{}}</span> habitat tomorrow. How likely do you think it is that the first <span class="wug">{{}}</span> that <span class="name">{{}}</span> sees on <span class="his">{{}}</span> hike will have <span class="property-singular">{{}}</span>?</p>
+      <br/>
+      <br/>
+      <table align="center">
+        <tbody>
+          <tr>
+            <td colspan="5" align="center" id="sliders"></td>
+          </tr>
+          <tr>
+            <td width="100" margin="10" align="center">Extremely Unlikely</td>
+            <td width="100" margin="10" align="center">Very Unlikely</td>
+            <td width="100" margin="10" align="center">Neutral</td>
+            <td width="100" margin="10" align="center">Very Likely</td>
+            <td width="100" margin="10" align="center">Extremely Likely</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="err">Please make sure to adjust the slider before continuing (or tap the slider if you think it's already in the right position).</p>
+    <div align="center"><button type="button" class="continue">Continue</button></div>
+  </td><td width="50"></td>
+  <td valign="top">
+  <div><span class="pos">{{}}</span> Notebook:</div>
   <br/>
-  <p class="block-text">Please study the <b><span class="wugs">{{}}</span></b> and their <b><span class="property">{{}}</span></b> (if they have any) before going on.</p>
-  <button type="button" class="continue">Continue</button>
+  <table width="400" border="1"><tbody>
+    <tr><td colspan="2" align="center"><span class="domain-plural-caps">{{}}</span></td></tr>
+    <tr><td class="wug0" align="center" width="100"></td><td width="400" align="center" height="88" id="examples0">?</td></tr>
+    <tr><td class="wug1" align="center"></td><td width="200" align="center" height="88" id="examples1">?</td></tr>
+    <tr><td class="wug2" align="center"></td><td height="88" align="center" id="examples2">?</td></tr>
+    <tr><td class="wug3" align="center"></td><td height="88" align="center" id="examples3">?</td></tr>
+    <tr><td class="wug4" align="center"></td><td height="88" align="center" id="examples4">?</td></tr>
+  </tbody></table>
+  </td></tr></tbody></table>
 </div>
 
 <div class="slide" id="target">
-  <br/>
-  <p class="center-text">You know about <b>one other kind of <span class="domain">{{}}</span></b>. <span class="domain-plural-caps"></span> of this <span class="fam2">last</span> kind are called <b><span class="wugs">{{}}</span></b>.
-    <span class="have-not-seen">But you haven't seen any <span class="wugs">{{}}</span> yet.</span>
-  <div id="utterance">
-    <p>All you know about <span class="wugs">{{}}</span> is that your supervisor, Scientist Sally, who is an expert on the <span class="domain">{{}}</span> of this planet, once told you:</p>
-    <br/>
-    <p><strong><font size="20"><span  id="statement">{{}}</span></font></strong></p>
-    <br/>
-  </div>
-  <p>You are now on your way to the habitat of the <span class="wugs">{{}}</span>. How likely do you think it is that the first <span class="wug">{{}}</span> you see on your hike will have <span class="property-singular">{{}}</span>?</p>
-  <table align="center">
-    <tbody>
-      <tr>
-        <td colspan="5" align="center" id="sliders">
-        </td>
-      </tr>
-      <tr>
-        <td width="130" margin="10" align="center">Extremely Unlikely</td>
-        <td width="130" margin="10" align="center">Very Unlikely</td>
-        <td width="130" margin="10" align="center">Neutral</td>
-        <td width="130" margin="10" align="center">Very Likely</td>
-        <td width="130" margin="10" align="center">Extremely Likely</td>
-      </tr>
-    </tbody>
-  </table>
-  <p class="err">Please make sure to adjust the slider before continuing (or tap the slider if you think it's already in the right position).</p>
+
   <button type="button" class="continue">Continue</button>
 </div>
 

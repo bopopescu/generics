@@ -12,7 +12,7 @@ function plural(word) {
     return(word + "s");
   }
 }
-function utterance(utteranceType, wug, fur) {
+function getUtterance(utteranceType, wug, fur) {
   switch (utteranceType) {
     case "generic":
       return caps(plural(wug)) + " have " + fur + ".";
@@ -54,6 +54,21 @@ function singular(property) {
     return property;
   }
 }
+var he = {
+  girl: "she",
+  boy: "he"
+};
+var his = {
+  girl: "her",
+  boy: "his"
+};
+var him = {
+  girl: "her",
+  boy: "him"
+};
+function possessive(name) {
+  return name + "'s";
+}
 
 //**********things that are randomized:
 var nonceWords = shuffle(["wug", "dax", "fep", "tig", "speff",
@@ -72,49 +87,29 @@ var conditions = shuffle([
   ["generic", "high"],
   ["none", "high"]
 ]);
+var names = {
+  girl: shuffle(["Anna", "Beth", "Carey", "Danielle", "Erica", "Sally"]),
+  boy: shuffle(["Andrew", "Ben", "Colin", "Daniel", "Eric", "Sam"])
+}
+var sciGender = shuffle(["boy", "girl"])[0];
+var sciName = names[sciGender].pop();
+//if we're not varying the person in between sections:
+var gender = shuffle(["boy", "girl"])[0];
+var name = names[sciGender].pop();
 //************************************
 
 var nFamiliarizations = distributions[conditions[0][1]].length;//4;
-var training_rows = 2;
-var training_columns = 10;
+var training_rows = 4;
+var training_columns = 5;
 var scale = 0.4;
 var nExamples = training_rows*training_columns; //per familirarization
 var nDomains = conditions.length;//domains.length;
 var nSet = nFamiliarizations + 2; //a set consists of the intro, plus all familiarization trials for a domain, plus the target
 var nQs = nDomains*(nSet);
 
-var qNumbers = [];
-for (var i=0; i<nQs; i++) {
-  qNumbers.push(i);
-}
-
-function domain(qNumber) {
-  return domains[Math.floor((qNumber/nSet)) % domains.length];
-}
-
-function propertyIndex(qNumber) {
-  return propertyIndices[Math.floor((qNumber/nSet)) % propertyIndices.length];
-}
-
-function property(qNumber) {
-  var propList = properties[domain(Math.floor(qNumber))];
-  return propList[propertyIndex(qNumber)];
-}
-
-function condition(qNumber) {
-  return conditions[Math.floor(qNumber/nSet) % conditions.length];
-}
-
 $(document).ready(function() {
   showSlide("consent");
   $("#mustaccept").hide();
-  if (nFamiliarizations == 1) {
-    $(".fam1").show();
-    $(".fam2").hide();
-  } else {
-    $(".fam1").hide();
-    $(".fam2").show();
-  }
   if (nDomains == 1) {
     $(".dom1").show();
     $(".dom2").hide();
@@ -122,20 +117,21 @@ $(document).ready(function() {
     $(".dom1").hide();
     $(".dom2").show();
   }
+
+  $(".sci-name").html(sciName);
+  $(".sci-he-caps").html(caps(he[sciGender]));
 });
 
 var experiment = {
   data: {
-    domains:qNumbers.map(domain),
-    properties:qNumbers.map(property),
-    conditions:qNumbers.map(condition),
-    nFamiliarizations:nFamiliarizations,
-    nExamples:nExamples,
-    nDomains:nDomains,
-    verion:"12-17"
+    sectionProperties:[],
+    version:"12-18",
+    targets:[]
   },
   
-  intro: function(qNumber) {
+  intro: function(qNumber, state, sectionProperties) {
+    var domain = sectionProperties.domain;
+    var property = sectionProperties.property;
     if (qNumber == 0) {
       $("#firstIntro").show();
       $("#laterIntro").hide();
@@ -143,83 +139,73 @@ var experiment = {
       $("#firstIntro").hide();
       $("#laterIntro").show();
     }
-    $(".domain").html(domain(qNumber));
-    $(".domain-plural").html(plural(domain(qNumber)));
-    $(".domain-plural-caps").html(caps(plural(domain(qNumber))));
-    $(".property").html(property(qNumber));
+    $(".domain").html(domain);
+    $(".domain-plural").html(plural(domain));
+    $(".domain-plural-caps").html(caps(plural(domain)));
+    $(".property").html(property);
     if (turk.previewMode) {
       $("#intro #mustaccept").show();
     } else {
       showSlide("intro");
       $(".continue").click(function() { 
-        experiment.trial(qNumber + 1);
+        //after intro is always first familiarization:
+        state.type = "familiarization";
+        state.familiarizationNumber = 0; //keep track of how many familiarizations have been seen so far
+        experiment.trial(qNumber + 1, state, sectionProperties);
       })
     }
   },
 
-  familiarization: function(qNumber) {
-    var wug = nonceWords[qNumber];
-    showSlide("familiarization");
+  familiarization: function(qNumber, state, sectionProperties) {
+
+    var distribution = sectionProperties.distribution;
+    var utterance = sectionProperties.utterance;
+    var property = sectionProperties.property;
+    var wug = sectionProperties.words[state.familiarizationNumber];
+    var thing = sectionProperties.things[state.familiarizationNumber];
+    var hasProp = sectionProperties.hasProp[state.familiarizationNumber];
+    var domain = sectionProperties.domain;
+    var propertyIndex = sectionProperties.propertyIndex;
+
+    showSlide("trial");
+    $(".err").hide();
+    $("#familiarization").show();
+    $("#target").hide();
     
     $(".Wugs").html(caps(plural(wug)));
     $(".Wug").html(caps(wug));
     $(".wugs").html(plural(wug));
     $(".wug").html(wug);
-    $(".domain").html(domain(qNumber));
-    $(".domain-plural").html(plural(domain(qNumber)));
-    $(".domain-plural-caps").html(caps(plural(domain(qNumber))));
-    $(".property").html(property(qNumber));
-
-    var Domain = constructor[domain(qNumber)];
-    var thing = new Domain();
 
     var training_html = "<center>";
+    var notebook_html = "<center>";
     for (var row=0;row<training_rows;row++)
     {       
       for (var col=0;col<training_columns;col++)
       {
         var index = row*training_columns + col;
         training_html += '<svg id="svg' + index + '"></svg>'
+        notebook_html += '<svg id="svg' + state.familiarizationNumber + '-' + index + '"></svg>'
       }
       training_html += "<br/>";
+      if (row % 2 == 1) {
+        notebook_html += "<br/>";
+      }
     }
     training_html += "</center>";
+    notebook_html += "</center>";
                 
     $("#examples").html(training_html);
+    $("#examples" + state.familiarizationNumber).html(notebook_html);
 
-    var distribution = condition(qNumber)[1];
-    var nPositiveExamplesList = distributions[distribution];
-    var nPositiveExamples = nPositiveExamplesList[ (qNumber % nSet) - 1];
+    sectionProperties.drawnObjects = [];
 
-    var trialData = {
-      nrow: training_rows,
-      ncol: training_columns,
-      drawnObjects: [],
-      condition: condition(qNumber),
-      domain: domain(qNumber),
-      property: property(qNumber),
-      distribution:distribution,
-      nPositiveExamples:nPositiveExamples,
-      nonceWord: wug,
-      utteranceType: condition(qNumber)[0],
-      qType:"familiarization"
-    }
+    var drawnObjects = []; //NOT RECORDED!!!!!!!!
 
-    var hasProp = [];
-    for (var i=0; i<nPositiveExamples; i++) {
-      hasProp.push(true);
-    }
-    for (var i=nPositiveExamples; i<nExamples; i++) {
-      hasProp.push(false);
-    }
-    var hasProp = shuffle(hasProp);
-
-    for (var row=0; row<training_rows; row++)
-    {       
-      for (var col=0; col<training_columns; col++)
-      {
+    for (var row=0; row<training_rows; row++) {       
+      for (var col=0; col<training_columns; col++) {
         var index = row*training_columns + col;
-        if (propertyIndex(qNumber) == 0) {
+        if (propertyIndex == 0) {
           prop0 = hasProp[index];
           prop1 = false;
         } else {
@@ -227,118 +213,53 @@ var experiment = {
           prop1 = hasProp[index];
         }
         drawnObject = thing.draw("svg" + index, prop0, prop1, scale);
-        trialData.drawnObjects[index] = drawnObject;
+        thing.draw("svg" + state.familiarizationNumber + '-' + index, prop0, prop1, 0.12);
+        drawnObjects[index] = drawnObject;
       }
     }
 
-    trialData.categoryMeans = JSON.stringify(thing);
+    sectionProperties.drawnObjects[state.familiarizationNumber] = drawnObjects;
 
     $(".continue").click(function() {
       $(".continue").unbind("click");
-      experiment.data["trial" + qNumber] = trialData;
       if (qNumber + 1 < nQs) {
-        experiment.trial(qNumber+1);
+        //repeat familiarization phase until nFamiliarizations familiarizations have been shown. then go to "target"
+        if (state.familiarizationNumber < nFamiliarizations-1) {
+          state.familiarizationNumber = 1 + state.familiarizationNumber;
+        } else {
+          state.type = "target";
+        }
+        experiment.trial(qNumber+1, state, sectionProperties);
       } else {
         experiment.questionaire();
       }
     })
   },
 
-  target: function(qNumber) {
-    var wug = nonceWords[qNumber];
-    showSlide("target");
+  target: function(qNumber, state, sectionProperties) {
+    var distribution = sectionProperties.distribution;
+    var utterance = sectionProperties.utterance;
+    var property = sectionProperties.property;
+    var wug = sectionProperties.words[nFamiliarizations];
+    var domain = sectionProperties.domain;
+
+    showSlide("trial");
+    $("#target").show();
+    $("#familiarization").hide();
     $(".err").hide();
     $(".Wugs").html(caps(plural(wug)));
     $(".Wug").html(caps(wug));
     $(".wugs").html(plural(wug));
     $(".wug").html(wug);
-    $(".domain").html(domain(qNumber));
-    $(".domain-plural").html(plural(domain(qNumber)));
-    $(".domain-plural-caps").html(caps(plural(domain(qNumber))));
-    $(".property").html(property(qNumber));
-    $(".property-singular").html(singular(property(qNumber)));
 
-    var cond = condition(qNumber);
-    var utteranceType = cond[0];
-
-    var distribution = cond[1];
 
     var trialData = {
-      responses:[],
-      domain: domain(qNumber),
-      property: property(qNumber),
-      utteranceType: utteranceType,
-      condition: cond,
+      response:null,
       distribution: distribution,
-      nonceWord: wug,
-      drawnObjects: [],
-      responses: [],
-      qType:"target"
+      utterance: utterance
     };
 
-/*    var categoryMeans = "";
-
-    var lastDist = cond[2];
-    if (lastDist == "none") {
-      $(".have-seen").hide();
-      $(".have-not-seen").show();
-      var nPositiveExamples = 0;
-      var haveSeen = false;
-    } else {
-      $(".have-seen").show();
-      $(".have-not-seen").hide();
-      var nPositiveExamplesList = distributions[lastDist];
-      var nPositiveExamples = nPositiveExamplesList[0];
-      var haveSeen = true;
-
-      //Draw examples
-      var Domain = constructor[domain(qNumber)];
-      var thing = new Domain();
-
-      var target_html = "<center>";
-      for (var row=0;row<training_rows;row++)
-      {       
-        for (var col=0;col<training_columns;col++)
-        {
-          var index = row*training_columns + col;
-          target_html += '<svg id="targetSvg' + index + '"></svg>'
-        }
-        target_html += "<br/>";
-      }
-      target_html += "</center>";
-                  
-      $("#targetExamples").html(target_html)
-
-      var hasProp = [];
-      for (var i=0; i<nPositiveExamples; i++) {
-        hasProp.push(true);
-      }
-      for (var i=nPositiveExamples; i<nExamples; i++) {
-        hasProp.push(false);
-      }
-      var hasProp = shuffle(hasProp);
-
-      for (var row=0; row<training_rows; row++)
-      {       
-        for (var col=0; col<training_columns; col++)
-        {
-          var index = row*training_columns + col;
-          if (propertyIndex(qNumber) == 0) {
-            prop0 = hasProp[index];
-            prop1 = false;
-          } else {
-            prop0 = false;
-            prop1 = hasProp[index];
-          }
-          drawnObject = thing.draw("targetSvg" + index, prop0, prop1, scale);
-          trialData.drawnObjects[index] = drawnObject;
-        }
-      }
-
-      categoryMeans = JSON.stringify(thing);
-    }*/
-
-    var statement = utterance(utteranceType, wug, property(qNumber));
+    var statement = getUtterance(utterance, wug, property);
     if (statement) {
       $("#utterance").show();
       $("#statement").html('"' + statement + '"');
@@ -348,42 +269,31 @@ var experiment = {
 
     var nResponses = 0;
 
-/*    trialData.nPositiveExamples = nPositiveExamples;
-    trialData.categoryMeans = categoryMeans;
-    trialData.haveSeen = haveSeen;*/
-
-    function changeCreator(i) {
-      return function(value) {
-        $('#slider' + i).css({"background":"#99D6EB"});
-        $('#slider' + i + ' .ui-slider-handle').css({
-          "background":"#667D94",
-          "border-color": "#001F29" });
-        if (trialData.responses[i] == null) {
-          nResponses++;
-        }
-        var sliderVal = $("#slider"+i).slider("value");
-        trialData.responses[i] = sliderVal;
-        $("#slider" + i + "val").html(sliderVal);
-      } 
-    }
-    function slideCreator(i) {
-      return function() {
-        $('#slider' + i + ' .ui-slider-handle').css({
-           "background":"#E0F5FF",
-           "border-color": "#001F29"
-        });
-      }
-    }
-
-    $("#sliders").html('<div class="slider" id="slider0"></div>');
-    $("#slider0").css({"height": 12, "width":800});
-    $("#slider0 .ui-slider-handle").attr({"background": "#FAFAFA"});
-    $('#slider0').slider({
+    $("#sliders").html('<div class="slider" id="slider"></div>');
+    $("#slider").css({"height": 12, "width":600});
+    $("#slider .ui-slider-handle").attr({"background": "#FAFAFA"});
+    $('#slider').slider({
       animate: true,
       orientation: "horizontal",
       max: 1 , min: 0, step: 0.01, value: 0.5,
-      slide: slideCreator(0),
-      change: changeCreator(0)
+      slide: function() {
+        $('#slider .ui-slider-handle').css({
+           "background":"#E0F5FF",
+           "border-color": "#001F29"
+        });
+      },
+      change: function(value) {
+        $('#slider').css({"background":"#99D6EB"});
+        $('#slider .ui-slider-handle').css({
+          "background":"#667D94",
+          "border-color": "#001F29" });
+        if (trialData.response == null) {
+          nResponses++;
+        }
+        var sliderVal = $("#slider").slider("value");
+        trialData.response = sliderVal;
+        //$("#sliderval").html(sliderVal);
+      },
     });
 
     $(".continue").click(function() {
@@ -392,9 +302,12 @@ var experiment = {
       } else {
         $(".continue").unbind("click");
         $(".err").hide();
-        experiment.data["trial" + qNumber] = trialData;
+        experiment.data.targets.push(trialData);
+        //now that all the object have been drawn:
+        experiment.data.sectionProperties.push(sectionProperties);
         if (qNumber + 1 < nQs) {
-          experiment.trial(qNumber+1);
+          //start over after each target question
+          experiment.trial(qNumber+1, {type:"new"});
         } else {
           experiment.questionaire();
         }
@@ -402,14 +315,85 @@ var experiment = {
     })
   },
 
-  trial: function(qNumber) {
+  trial: function(qNumber, state, sectionProperties) {
     $('.bar').css('width', ( (qNumber / nQs)*100 + "%"));
-    if (qNumber % nSet == 0) {
-      experiment.intro(qNumber);
-    } else if (qNumber % nSet == (nSet-1)) {
-      experiment.target(qNumber);
+
+    //write new section properties to data each section:
+    if (state.type == "new") {
+      var sectionProperties = {
+        domain: domains.pop(), //e.g. "tree"
+        cond: conditions.pop(),
+        drawnObjects: [],
+        //gender: shuffle(["boy", "girl"])[0]
+        gender: gender
+      }
+      //sectionProperties.name = names[sectionProperties.gender].pop();
+      sectionProperties.name = name;
+      //words for familiarizations and target:
+      sectionProperties.words = []; //e.g. ["wugs", "tigs", "daxes", "feps", "gorps"]
+      for (var i=1; i<=nFamiliarizations+1; i++) {
+        sectionProperties.words.push(nonceWords.pop());
+      }
+      //category means for familiarization and target:
+      sectionProperties.things = [];
+      for (var i=1; i<=nFamiliarizations+1; i++) {
+        var Domain = constructor[sectionProperties.domain];
+        var thing = new Domain();
+        sectionProperties.things.push(thing);
+      }
+      sectionProperties.utterance = sectionProperties.cond[0]; //generic or none (or neg?)
+      sectionProperties.distribution = sectionProperties.cond[1]; //low or high
+      if (sectionProperties.domain == "monster") { //teeth don't show up in notebook
+        sectionProperties.propertyIndex = 0;
+      } else if (sectionProperties.domain == "fish") { //fangs don't show up in notebook
+        sectionProperties.propertyIndex = 1;
+      } else {
+        sectionProperties.propertyIndex = shuffle([0,1])[0];
+      }
+      sectionProperties.property = properties[sectionProperties.domain][sectionProperties.propertyIndex];
+
+      //distribution of property among the 20 (or however many) objects - ONLY for familiarization
+      sectionProperties.hasProp = [];
+      for (var i=0; i<nFamiliarizations; i++) {
+        var nPositiveExamples = distributions[sectionProperties.distribution][i];
+        var hasProp = [];
+        for (var k=0; k<nPositiveExamples; k++) {
+          hasProp.push(true);
+        }
+        for (var k=nPositiveExamples; k<nExamples; k++) {
+          hasProp.push(false);
+        }
+        var hasProp = shuffle(hasProp);
+        sectionProperties.hasProp.push(hasProp);
+      }
+      console.log(sectionProperties.hasProp);
+      state.type = "intro";
+
+      for (var i=0; i<sectionProperties.words.length; i++) {
+        var word = sectionProperties.words[i];
+        $(".wug"+i).html(plural(word));
+        $("#examples" + i).html("?");
+      }
+
+      $(".domain").html(sectionProperties.domain);
+      $(".domain-plural").html(plural(sectionProperties.domain));
+      $(".domain-plural-caps").html(caps(plural(sectionProperties.domain)));
+      $(".property").html(sectionProperties.property);
+      $(".property-singular").html(singular(sectionProperties.property));
+      $(".name").html(sectionProperties.name);
+      $(".he-caps").html(caps(he[sectionProperties.gender]));
+      $(".he").html(he[sectionProperties.gender]);
+      $(".his").html(his[sectionProperties.gender]);
+      $(".him").html(him[sectionProperties.gender]);
+      $(".pos").html(possessive(sectionProperties.name));
+    }
+
+    if (state.type == "intro") {
+      experiment.intro(qNumber, state, sectionProperties);
+    } else if (state.type == "target") {
+      experiment.target(qNumber, state, sectionProperties);
     } else {
-      experiment.familiarization(qNumber);
+      experiment.familiarization(qNumber, state, sectionProperties);
     }
   },
   
