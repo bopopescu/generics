@@ -95,7 +95,7 @@ var sciGender = shuffle(["boy", "girl"])[0];
 var sciName = names[sciGender].pop();
 //if we're not varying the person in between sections:
 var gender = shuffle(["boy", "girl"])[0];
-var name = names[sciGender].pop();
+var name = names[gender].pop();
 //************************************
 
 var nFamiliarizations = distributions[conditions[0][1]].length;//4;
