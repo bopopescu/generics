@@ -259,6 +259,10 @@ var experiment = {
         $("#click_on_all_targets").hide();
         $("#what_kind_question").show();
       })
+    } else {
+      $("#there_are_none").click(function() {
+        $("#not_all").show();
+      })
     }
 
     return function() {
