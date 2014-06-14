@@ -120,7 +120,7 @@ button[disabled] {
 
 .left_slider_meaning {
   display: inline;
-  margin: 0 auto;
+  float: left;
   text-align: left;
 }
 
@@ -132,6 +132,12 @@ button[disabled] {
 
 .slider_container {
   width: 400px;
+  display: block;
+  margin: auto auto;
+}
+
+.slider_section {
+  margin: 1em;
 }
 
 table {
