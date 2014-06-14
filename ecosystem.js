@@ -164,6 +164,19 @@ var Ecosystem = {
         svgContainer.setAttribute("width", (scaleFactor*250).toString() + "px");
         svgContainer.setAttribute("height", (scaleFactor*250).toString() + "px");
         svgContainer.setAttribute("viewBox", "0 0 250 250");
+
+        return {
+            "category": category,
+            "col1": col1,
+            "col2": col2,
+            "col3": col3,
+            "col4": col4,
+            "col5": col5,
+            "prop1": prop1,
+            "prop2": prop2,
+            "tar1": tar1,
+            "tar2": tar2
+        };
     },
 
     endpoints: function(category, col1, col2, col3, col4, col5) {
@@ -379,7 +392,7 @@ var Ecosystem = {
 	            }
 	        }
             //pass along all user-specified
-            Ecosystem.draw(this.category, tokenProperties, paperlabel, scaleFactor);
+            return Ecosystem.draw(this.category, tokenProperties, paperlabel, scaleFactor);
         }
 
         this.oldDraw = function(paperlabel, tar1, tar2, scaleFactor) {
