@@ -409,6 +409,9 @@ var experiment = {
     }
     $(".ui-slider-handle").hide();
     return function() {
+	if (n_responses != sentences.length) {
+		$(".err").show();
+	}
       return n_responses == sentences.length;
     }
   },
@@ -418,32 +421,6 @@ var experiment = {
     var category_type = randomization.posterior_order[posterior_index];
     var amount_positive_examples = randomization.amount_positive_examples[category_type];
     var category = randomization.categories[category_type];
-
-    var small_creature_images = "";
-    for (var i=0; i<number_of_examples; i++) {
-      small_creature_images += "<svg class='creature_image' id='posterior_small_creature" + i + "'></svg>";
-    }
-    $("#posterior_smaller_creature_images").html(small_creature_images);
-    for (var i=0; i<number_of_examples; i++) {
-      Ecosystem.draw(randomization.creature,
-        randomization.properties[category_type][i],
-        "posterior_small_creature" + i,
-        scale/2);
-    }
-
-    $("#posterior_i_remember_now").hide();
-    $("#posterior_reminder").show();
-    $("#posterior_smaller_creature_images").hide();
-    $("#posterior_reminder").click(function() {
-      $("#posterior_reminder").hide();
-      $("#posterior_smaller_creature_images").show();
-      $("#posterior_i_remember_now").show();
-    })
-    $("#posterior_i_remember_now").click(function() {
-      $("#posterior_i_remember_now").hide();
-      $("#posterior_smaller_creature_images").hide();
-      $("#posterior_reminder").show();
-    })
 
     var target_property_plural = plural(target_features[randomization.creature][randomization.target_feature_index]);
 
@@ -505,10 +482,10 @@ var experiment = {
           var category_type = randomization.order[c];
           for (var i=0; i<randomization.sentences[category_type].length; i++) {
             var trial = {}
-            var sentence_type = randomization.sentences[category_type];
-            if (responses["completion_type" + i] != sentence_type) {
-              alert(responses["completion_type" + i] + " doesn't equal " +
-                sentence_type + " for " + category_type + " category (item " + i + ")!");
+            var sentence_type = randomization.sentences[category_type][i];
+            if (responses[category_type]["completion_type" + i] != sentence_type) {
+              alert(responses[category_type]["completion_type" + i] + " doesn't equal " +
+                sentence_type + " for category type " + category_type + " (item " + i + ")!");
             }
             trial.response = last(responses[category_type]["slider" + i]);
             trial.sentence_type = responses[category_type]["completion_type" + i];
