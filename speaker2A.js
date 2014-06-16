@@ -204,7 +204,11 @@ $(document).ready(function() {
 });
 
 var experiment = {
-  data: {},
+  data: {
+    "reminder_target":false,
+    "reminder_context_category0":false,
+    "reminder_context_category1":false
+  },
 
   begin: function() {
     if (turk.previewMode) {
@@ -356,6 +360,7 @@ var experiment = {
     $("#reminder").show();
     $("#smaller_creature_images").hide();
     $("#reminder").click(function() {
+      experiment.data["reminder_" + category_type] = true;
       $("#reminder").hide();
       $("#smaller_creature_images").show();
       $("#i_remember_now").show();
@@ -476,6 +481,7 @@ var experiment = {
         experiment.data["all_responses"] = responses;
         experiment.data["start_time"] = start_time;
         experiment.data["end_time"] = Date.now();
+        experiment.data["duration"] = experiment.data["end_time"] - experiment.data["start_time"];
         //trial level
         var trials = [];
         for (var c=0; c<randomization.order.length; c++) {
@@ -490,18 +496,21 @@ var experiment = {
             trial.response = last(responses[category_type]["slider" + i]);
             trial.sentence_type = responses[category_type]["completion_type" + i];
             trial.category_type = category_type;
+            trial.trial_type = "speaker_ratings";
             trial.amount_positive_examples = randomization.amount_positive_examples[category_type];
             trials.push(trial);
           }
           trials.push({
             "response": last(responses[category_type].prediction),
             "sentence_type": "NA",
+            "trial_type": "posterior_predictive",
             "category_type": category_type,
             "amount_positive_examples": randomization.amount_positive_examples[category_type]
           })
           trials.push({
             "response": responses[category_type].category_name,
             "sentence_type": "NA",
+            "trial_type": "name_attention_check",
             "category_type": category_type,
             "amount_positive_examples": randomization.amount_positive_examples[category_type]
           })
