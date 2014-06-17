@@ -1,6 +1,6 @@
 library(rjson)
 
-rdata = read.table("~/CoCoLab/generics/clean-generics.results", sep="\t", header=T)
+rdata = read.table("~/CoCoLab/generics/generics1.results", sep="\t", header=T)
 rdata$responses = as.character(rdata$responses)
 rdata = rdata[rdata$responses != "[0,0,0,0,0,0,0,0,0,0]",]
 rdata$distribution = as.character(rdata$distribution)

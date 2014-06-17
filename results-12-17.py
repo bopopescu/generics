@@ -6,10 +6,10 @@ f2 = open("generics-erin.results", "r")
 f3 = open("generics-erin2.results", "r")
 f4 = open("generics-simpler-erin.results", "r")
 f5 = open("generics-simpler.results", "r")
-w = open("generics1.results", "w")
-w.write("\t".join(["subj", "distribution", "utteranceType", "response", "qNum", "domain", "comments"]))
+w = open("generics-12-17.results", "w")
+w.write("\t".join(["subj", "distribution", "utteranceType", "response"]))
 w.close()
-w = open("generics1.results", "a")
+w = open("generics-12-17.results", "a")
 header = []
 
 sep = "\t"
@@ -18,10 +18,9 @@ subjNums = {}
 def subjNum(elem):
 	if not elem in subjNums.keys():
 		subjNums[elem] = str(len(subjNums))
-		return subjNums[elem]
 	else:
 		print "repeat"
-		return "repeat"
+	return subjNums[elem]
 
 def cutFirstAndLast(x, i=1, j=1):
 	return x[i:(len(x)-j)]
@@ -58,10 +57,6 @@ for line in f5:
 	distribution = ""
 	utteranceType = ""
 	response = ""
-	domain = ""
-	qDatas = []
-	qProps = []
-	comments = ""
 
 	# get subj data from csv:
 	if firstLine:
@@ -73,21 +68,13 @@ for line in f5:
 			elem = row[i]
 			if heading == "workerid":
 				subj = subjNum(elem) #SUBJECT NUMBER
-			if heading == "Answer.comments":
-				comments = cutFirstAndLast(elem) #comments
-			elif heading == "Answer.sectionProperties":
-				if (len(elem) > 0):
-					qProps = json.loads(tameQuotes(cutFirstAndLast(elem)))
-			elif heading == "Answer.targets":
-				if (len(elem) > 0):
-					qDatas = json.loads(tameQuotes(cutFirstAndLast(elem)))
-	if (len(qDatas) == 6):
-		for i in range(len(qDatas)):
-			qData = qDatas[i]
-			response = str(qData["response"])
-			utteranceType = qData["utterance"]
-			distribution = qData["distribution"]
-			domain = qProps[i]["domain"]
-			w.write("\n" + subj + "\t" + distribution + "\t" + utteranceType + "\t" + response + "\t" + str(i) + "\t" + domain + "\t" + comments)
+			elif heading in map(lambda x: "Answer.trial"+str(x), range(0,20)) and len(elem)>0:
+				qData = json.loads(tameQuotes(cutFirstAndLast(elem)))
+				qType = qData["qType"]
+				if qType == "target":
+					response = str(qData["responses"][0])
+					utteranceType = qData["utteranceType"]
+					distribution = qData["distribution"]
+					w.write("\n" + subj + "\t" + distribution + "\t" + utteranceType + "\t" + response)
 f5.close()
 w.close()
