@@ -340,6 +340,11 @@ var experiment = {
   },
 
   sentences: function(sentences_index) {
+    if (sentences_index == 0) {
+      $(".when").html("Afterwards");
+    } else {
+      $(".when").html("Next,");
+    }
     var category_type = randomization.sentences_order[sentences_index];
     var amount_positive_examples = randomization.amount_positive_examples[category_type];
     var category = randomization.categories[category_type];
