@@ -110,7 +110,8 @@ var distributions = {
   "half": [true, true, true, true, true, false, false, false, false, false],
   "all": [true, true, true, true, true, true, true, true, true, true],
   "most": [true, true, true, true, true, true, true, true, true, false],
-  "few": [true, false, false, false, false, false, false, false, false, false]
+  "few": [true, false, false, false, false, false, false, false, false, false],
+  "three": [true, true, true, false, false, false, false, false, false, false]
 }
 
 /*shuffle(
@@ -159,7 +160,7 @@ var randomization = {
     "context_category0":[],
     "context_category1":[]
   },
-  "context": sample(["higher", "same", "lower"]),
+  "context": sample(["higher", "same", "lower", "a_bit_lower"]),
   "shuffling": {
     "target": shuffle([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]),
     "context_category0": shuffle([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]),
@@ -177,8 +178,8 @@ var randomization = {
 randomization.amount_positive_examples = {target: "half"};
 //randomization.amount_positive_examples.context_category0 = randomization.context == "higher" ? "all" : randomization.context == "same" ? "half" : "none";
 //randomization.amount_positive_examples.context_category1 = randomization.context == "higher" ? "all" : randomization.context == "same" ? "half" : "none";
-randomization.amount_positive_examples.context_category0 = randomization.context == "higher" ? "most" : randomization.context == "same" ? "half" : "few";
-randomization.amount_positive_examples.context_category1 = randomization.context == "higher" ? "most" : randomization.context == "same" ? "half" : "few";
+randomization.amount_positive_examples.context_category0 = randomization.context == "higher" ? "most" : randomization.context == "same" ? "half" : randomization.context == "a_bit_lower" ? "three" : "few";
+randomization.amount_positive_examples.context_category1 = randomization.context == "higher" ? "most" : randomization.context == "same" ? "half" : randomization.context == "a_bit_lower" ? "three" : "few";
 
 randomization.categories = {
   "target":randomization.nonce_words[0],
@@ -268,6 +269,8 @@ var experiment = {
       num_needed_clicked_on = number_of_examples - 1;
     } else if (amount_positive_examples == "half") {
       num_needed_clicked_on = number_of_examples / 2;
+    } else if (amount_positive_examples == "three") {
+      num_needed_clicked_on = 3;
     } else if (amount_positive_examples == "few") {
       num_needed_clicked_on = 1;
     } else {
@@ -341,9 +344,9 @@ var experiment = {
 
   sentences: function(sentences_index) {
     if (sentences_index == 0) {
-      $(".when").html("Afterwards");
+      $(".when").html("Afterwards, Scientist Sally is describing the properties of the " + plural(randomization.creature) + " you saw on your hike. She says,");
     } else {
-      $(".when").html("Next");
+      $(".when").html("Next she says,");
     }
     var category_type = randomization.sentences_order[sentences_index];
     var amount_positive_examples = randomization.amount_positive_examples[category_type];
