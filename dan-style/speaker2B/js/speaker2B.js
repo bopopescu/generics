@@ -42,7 +42,7 @@ function make_slides(f) {
         for (var i=0; i<example_properties.length; i++) {
           $("#set_of_examples").append("<svg class='creature_image' id='svg" + i + "'/>");
           var p = example_properties[i];
-          Ecosystem.draw(p.category, p, "svg" + i, 0.3);
+          Ecosystem.draw(p.category, p, "svg" + i, 0.4);
           $("#svg" + i).click(this.clickCreator(i, stim));
         }
       },
