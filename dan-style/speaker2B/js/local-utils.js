@@ -36,3 +36,12 @@ function position_debug() {
 function caps(a) {return a.substring(0,1).toUpperCase() + a.substring(1,a.length);}
 
 function clone(o) {return JSON.parse(JSON.stringify(o));}
+
+function is_same(response, creature) {
+  var result = response.match(new RegExp(creature + "|" + plural(creature), "i"));
+  if (result) {
+    return true;
+  } else {
+    return false;
+  }
+}

@@ -15,10 +15,10 @@ function make_slides(f) {
 
   slides.instructions = slide(
     {
-    name : "instructions",
-    button : function(){
-      exp.go();
-    }
+      name : "instructions",
+      button : function(){
+        exp.go();
+      }
     }
   );
 
@@ -31,12 +31,62 @@ function make_slides(f) {
       },
       present_handle : function(stim) {
         all_slides_do_this(stim);
+        $("#click_on_all_targets").show();
+        $("#what_kind_question").hide();
+
+        this.num_positive_examples = stim.num_positive_examples;
+        this.num_needed_clicked_on = this.num_positive_examples;
+        this.category_name = stim.genus;
+
+        var example_properties = stim.examples;
+        for (var i=0; i<example_properties.length; i++) {
+          $("#set_of_examples").append("<svg class='creature_image' id='svg" + i + "'/>");
+          var p = example_properties[i];
+          Ecosystem.draw(p.category, p, "svg" + i, 0.3);
+          $("#svg" + i).click(this.clickCreator(i, stim));
+        }
       },
       update_progress : function() {
         exp.phase++;
       },
       button : function() {
-        _stream.apply(this);
+        if (this.num_positive_examples == 0) {
+          $(".creature_image").unbind("click");
+          $("#set_of_examples").html("");
+          _stream.apply(_s);
+        } else {
+          $("#not_all").show();
+        }
+      },
+      continue : function() {
+        var what_kind_response = $("#what_kind").val();
+        if (!is_same(what_kind_response, _s.category_name)) {
+          $("#what_kind_err").show();
+        } else {
+          $("#what_kind_err").hide();
+          $("#set_of_examples").html("");
+          $("#what_kind").val("");
+          _stream.apply(_s);
+          //responses[category_type]["category_name"] = what_kind_response;
+        }
+      },
+      clickCreator: function(i, stim) {
+        return function() {
+          $( "#svg" + i ).unbind("click");
+          if (stim.has_property[i]) {
+            $("#not_all").hide();
+            _s.num_needed_clicked_on = _s.num_needed_clicked_on - 1;
+            $( "#svg" + i ).css("padding", "0px");
+            $( "#svg" + i ).css("border", "1px solid black");
+            if (_s.num_needed_clicked_on == 0) {
+              $(".creature_image").unbind("click");
+              $("#click_on_all_targets").hide();
+              $("#what_kind_question").show();
+            }
+          } else {
+            //responses[category_type].incorrect_image_clicks.push(Date.now());
+          }
+        }
       }
     }
   );
@@ -50,12 +100,47 @@ function make_slides(f) {
       },
       present_handle : function(stim) {
         all_slides_do_this(stim);
+        this.init_sliders();
       },
       update_progress : function() {
         exp.phase++;
       },
       button : function() {
-        _stream.apply(this);
+        if (exp.sliderPost != null) {
+          _stream.apply(this);
+        } else {
+          $(".err").show();
+        }
+      },
+      init_sliders : function() {
+        exp.sliderPost=null;
+        /*$(".hi_sim_slide").css('width' , 3*(exp.width/4)).centerhin();
+        $("k.slider-lbl1 ").css('right' , (exp.width/4) *3.2 +20);
+        $(".slider-lbl2 ").css('left' , (exp.width/4) *3.2 +20);
+        $(".slider-lbl3 ").css('left' , (exp.width/2));*/
+        $("#prediction_slider_container").slider({
+          range : "min",
+          value : 50,
+          min : 0,
+          max : 100,
+          slide : function(event, ui) {
+            exp.sliderPost = ui.value/100;
+          }
+        });
+
+        $("#prediction_slider_container").mousedown(function(){
+          $('#prediction_slider_container').css({"background":"#99D6EB"});
+          $('#prediction_slider_container .ui-slider-range').css({"background":"#99D6EB"});
+          $('#prediction_slider_container .ui-slider-handle').show();
+          $('#prediction_slider_container .ui-slider-handle').css({
+            "background":"#667D94",
+            "border-color": "#001F29"
+          });
+        });
+        $("#prediction_slider_container").slider("option","value",0);//reset slider
+        $(".ui-slider-handle").css('display', 'none');
+        $('#prediction_slider_container').css({"background":"#ffffff"});
+        $('#prediction_slider_container .ui-slider-range').css({"background":"#ffffff"});
       }
     }
   );
@@ -65,16 +150,49 @@ function make_slides(f) {
       name : "generic",
       present_stack : exp.clone_categories(),
       start: function() {
+        $(".when").html("Imagine that after the hike, Scientist Sally is describing the properties of the <span class='BIRDS'>{{}}</span> you saw on your hike.");
         this.present = this.present_stack.shift();
       },
       present_handle : function(stim) {
         all_slides_do_this(stim);
+        this.init_sliders();
       },
       update_progress : function() {
         exp.phase++;
       },
       button : function() {
+        $(".when").html("");
         _stream.apply(this);
+      },
+      init_sliders : function() {
+        exp.sliderPost=null;
+        /*$(".hi_sim_slide").css('width' , 3*(exp.width/4)).centerhin();
+        $("k.slider-lbl1 ").css('right' , (exp.width/4) *3.2 +20);
+        $(".slider-lbl2 ").css('left' , (exp.width/4) *3.2 +20);
+        $(".slider-lbl3 ").css('left' , (exp.width/2));*/
+        $("#generic_slider_container").slider({
+          range : "min",
+          value : 50,
+          min : 0,
+          max : 100,
+          slide : function(event, ui) {
+            exp.sliderPost = ui.value/100;
+          }
+        });
+
+        $("#generic_slider_container").mousedown(function(){
+          $('#generic_slider_container').css({"background":"#99D6EB"});
+          $('#generic_slider_container .ui-slider-range').css({"background":"#99D6EB"});
+          $('#generic_slider_container .ui-slider-handle').show();
+          $('#generic_slider_container .ui-slider-handle').css({
+            "background":"#667D94",
+            "border-color": "#001F29"
+          });
+        });
+        $("#generic_slider_container").slider("option","value",0);//reset slider
+        $(".ui-slider-handle").css('display', 'none');
+        $('#generic_slider_container').css({"background":"#ffffff"});
+        $('#generic_slider_container .ui-slider-range').css({"background":"#ffffff"});
       }
     }
   );
@@ -241,7 +359,7 @@ function make_categories(exp) {
     genus[species_index] = [
       {
         "species": species[species_index],
-        "creature_generator": new Ecosystem.Genus(species[species_index]),
+        "creature_generator": new Ecosystem.Genus(species[species_index], {var: 0.3}),
         "genus": nonce_words.shift(),
         "has_property":[],
         "examples": [],
@@ -251,7 +369,7 @@ function make_categories(exp) {
       },
       {
         "species": species[species_index],
-        "creature_generator": new Ecosystem.Genus(species[species_index]),
+        "creature_generator": new Ecosystem.Genus(species[species_index], {var: 0.3}),
         "genus": nonce_words.shift(),
         "has_property": [],
         "examples": [],
@@ -263,6 +381,7 @@ function make_categories(exp) {
     for (var g=0; g<2; g++) {
       var unshuffled_has_property = [];
       var num_positive_examples = Math.round(genus[species_index][g].target_proportion * exp.num_examples);
+      genus[species_index][g].num_positive_examples = num_positive_examples;
       for (var e=0; e<exp.num_examples; e++) {
         if (e < num_positive_examples) {
           unshuffled_has_property.push(true);
@@ -287,15 +406,20 @@ function make_categories(exp) {
 
 function all_slides_do_this(stim) {
   $('.bar').css('width', ( (exp.phase / exp.nQs)*100 + "%"));
+  words(stim);
+  $('.err').hide();
+}
+
+function words(stim) {
   var bird = stim.species;
   var wug = stim.genus;
   var wugs = plural(wug);
   var cap_wugs = caps(wugs);
   var tails = plural(stim.feature);
   $(".BIRD").html(bird);
+  $(".BIRDS").html(plural(bird));
   $(".WUG").html(wug);
   $(".WUGS").html(wugs);
   $(".cap_WUGS").html(cap_wugs);
   $(".TAILS").html(tails);
-  $('.err').hide();
 }

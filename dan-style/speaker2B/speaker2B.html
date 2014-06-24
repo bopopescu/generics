@@ -81,32 +81,57 @@
             <p>You and Scientist Sally <!-- <span class="temporal_adverb">{{}}</span> --> go to the habitat of the <span class="WUGS">{{}}</span>. <span class="cap_WUGS">{{}}</span> are a kind of <span class="BIRD">{{}}</span>. Here are the <span class="WUGS">{{}}</span> that you see.</p>
             <p>Please study the <span class="WUGS">{{}}</span> carefully. Pay particular attention to their <span class="TAILS">{{}}</span>.</p>
             <div id="set_of_examples"></div>
-            <button type="button" class="space" onclick="_s.button();">I don't see any <span class="WUGS">{{}}</span> with <span class="TAILS">{{}}</span></button>
-            <p class="err">There are more <span class="WUGS">{{}}</span> with <span class="TAILS">{{}}</span>! Please click on all of them.</p>
+              <br/>
+            <div class="question" id="what_kind_question">
+              <p>What kind of <span class="BIRDS">{{}}</span> are these? <input class="to_clear" type="text" id="what_kind"></input></p>
+              <button type="button" class="space" onclick="_s.continue();">Continue</button>
+              <p class="err" id="what_kind_err">That's not what kind of <span class="BIRDS">{{}}</span> these are. Please check that you spelled your response correctly. You only need to give the name of the kind of <span class="BIRDS">{{}}</span>. Answer in one word.</p>
+            </div>
+            <div class="question" id="click_on_all_targets">
+              <p>First, please click on all of the <span class="WUGS">{{}}</span> that have <span class="TAILS">{{}}</span></p>
+              <button type="button" class="space" onclick="_s.button();">I don't see any <span class="WUGS">{{}}</span> with <span class="TAILS">{{}}</span></button>
+              <p class="err" id="not_all">There are more <span class="WUGS">{{}}</span> with <span class="TAILS">{{}}</span>! Please click on all of them.</p>
+            </div>
           </div>
         </div>
 
         <div id="prediction" class="slide">
-          <p>Imagine you saw another 100 <span class="WUGS">{{}}</span>. How many of them do you think would have <span class="TAILS">{{}}</span>?</p>
-          <div class="slider_section">
-            <div class="slider_container"><div class="left_slider_meaning">0</div><div class="right_slider_meaning">100</div></div>
-            <div class="slider_container" id="prediction_slider_container"></div>
+          <div class="lower">
+            <p>Imagine you saw another 100 <span class="WUGS">{{}}</span>. How many of them do you think would have <span class="TAILS">{{}}</span>?</p>
+            <div class="slider_section">
+              <div class="slider_meaning_container">
+                <div class="left_slider_meaning">0</div>
+                <div class="right_slider_meaning">100</div>
+              </div>
+              <br/>
+              <div class="slider_container" id="prediction_slider_container"></div>
+              <br/>
+            </div>
+            <button type="button" class="space" onclick="_s.button();">Continue</span></button>
+            <p class="err">Please make sure to adjust the slider before continuing. Click on the bar to make the slider handle appear.</p>
           </div>
-          <button type="button" class="space" onclick="_s.button();">Continue</span></button>
-          <p class="err">Please make sure to adjust the slider before continuing. Click on the bar to make the slider handle appear.</p>
         </div>
 
         <div class="slide" id="generic">
-          <p class="when">{{}}</p>
-          <p>How likely do you think it is that Scientist Sally would say the following sentence?</p>
-          <p><strong>"<span class="cap_WUGS">{{}}</span> have <span class="TAILS">{{}}</span>.</strong></p>
-          <button type="button" onclick="_s.reminder()">Remind me what the <span class="WUGS">{{}}</span> looked like!</button>
-          <div id="smaller_examples" class="creature_images"></div>
-          <button type="button" onclick="_s.i_remember_now()">OK, I remember now.</button>
-
-          <table><tbody id="slider_table"></tbody></table>
-          <button type="button" class="space" onclick="_s.button()">Continue</button>
-          <p class="err">Please make sure to adjust the slider before continuing. Click on the bar to make the slider handle appear.</p>
+          <div class="lower">
+            <p class="when">{{}}</p>
+            <p>How likely do you think it is that Scientist Sally would say the following sentence?</p>
+            <p><strong>"<span class="cap_WUGS">{{}}</span> have <span class="TAILS">{{}}</span>.</strong></p>
+            <!-- <button type="button" onclick="_s.reminder()">Remind me what the <span class="WUGS">{{}}</span> looked like!</button>
+            <div id="smaller_examples" class="creature_images"></div>
+            <button type="button" onclick="_s.i_remember_now()">OK, I remember now.</button> -->
+            <div class="slider_section">
+              <div class="slider_meaning_container">
+                <div class="left_slider_meaning">very unlikely</div>
+                <div class="right_slider_meaning">very likely</div>
+              </div>
+              <br/>
+              <div class="slider_container" id="generic_slider_container"></div>
+              <br/>
+            </div>
+            <button type="button" class="space" onclick="_s.button()">Continue</button>
+            <p class="err">Please make sure to adjust the slider before continuing. Click on the bar to make the slider handle appear.</p>
+          </div>
         </div>
 
         <div class="slide js"  id="subj_info">
