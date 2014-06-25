@@ -316,7 +316,7 @@ function init() {
   $('body').css('visibility','visible');
   exp_sizing();
 
-  exp.nQs = 25;
+  //exp.nQs = 25;
   exp.num_examples = 10;
 
   exp.data_trials=[];
@@ -343,11 +343,13 @@ function init() {
   exp.structure=['i0', 'instructions'];
   for (var i=0; i<exp.species.length; i++) {
     exp.structure.push("examples");
-    exp.structure.push("prediction");
+    //exp.structure.push("prediction");
     exp.structure.push("generic");
   }
   exp.structure.push("subj_info");
   exp.structure.push("thanks");
+
+  exp.nQs = exp.species.length * 4;
 
   $("#click_on_all_targets").show();
   //exp.prog = 0;
@@ -412,16 +414,17 @@ function make_categories(exp) {
     bird: ["tail", "crest"]
   }
 
-  var species = _.shuffle(["bird", "fish", "flower", "bug"]);
+  var species = _.shuffle(["bird", "fish", "flower"//, "bug"
+                          ]);
   exp.species = species;
 
   var feature_proportions = _.shuffle([
-    [.1, .1],
+    //[.1, .1],
     [.1, .5],
-    [.1, .9],
+    //[.1, .9],
     [.5, .5],
     [.5, .9],
-    [.9, .9],
+    //[.9, .9],
   ].map(function(e) {return _.shuffle(e);})).slice(0, species.length);
 
   var target_feature_index = [];
