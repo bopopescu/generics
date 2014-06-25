@@ -30,6 +30,17 @@ function make_slides(f) {
         this.present = this.present_stack.shift();
       },
       present_handle : function(stim) {
+        _s.trial_data = clone(stim);
+        _s.trial_data["trial_type"] = "familiarization";
+        _s.trial_data["trial_number"] = exp.phase;
+        _s.trial_data["feature_start"] = Date.now();
+        _s.trial_data["label_start"] = -1;
+        _s.trial_data["incorrect_clicks"] = [];
+        _s.trial_data["correct_clicks"] = [];
+        _s.trial_data["incorrect_labels"] = [];
+        _s.trial_data["response"] = "";
+        _s.trial_data["rt"] = -1;
+
         all_slides_do_this(stim);
         $("#click_on_all_targets").show();
         $("#what_kind_question").hide();
@@ -51,29 +62,46 @@ function make_slides(f) {
       },
       button : function() {
         if (this.num_positive_examples == 0) {
+          _s.trial_data.correct_clicks.push({
+            "creature_index": "none",
+            "time": Date.now() - _s.trial_data.feature_start
+          });
           $(".creature_image").unbind("click");
-          $("#set_of_examples").html("");
-          _stream.apply(_s);
+          $("#click_on_all_targets").hide();
+          $("#what_kind_question").show();
+          _s.trial_data.label_start = Date.now();
+          //$("#set_of_examples").html("");
         } else {
+          _s.trial_data.incorrect_clicks.push({
+            "creature_index": "none",
+            "time": Date.now() - _s.trial_data.feature_start
+          });
           $("#not_all").show();
         }
       },
       continue : function() {
         var what_kind_response = $("#what_kind").val();
         if (!is_same(what_kind_response, _s.category_name)) {
+          _s.trial_data.incorrect_labels.push({"label": what_kind_response, "time": Date.now() - _s.trial_data.label_start});
           $("#what_kind_err").show();
         } else {
+          _s.trial_data.response = what_kind_response;
+          _s.trial_data.rt = Date.now() - _s.trial_data.label_start;
           $("#what_kind_err").hide();
           $("#set_of_examples").html("");
           $("#what_kind").val("");
+          exp.data_trials.push(clone(_s.trial_data));
           _stream.apply(_s);
-          //responses[category_type]["category_name"] = what_kind_response;
         }
       },
       clickCreator: function(i, stim) {
         return function() {
           $( "#svg" + i ).unbind("click");
           if (stim.has_property[i]) {
+            _s.trial_data.correct_clicks.push({
+              "creature_index": i,
+              "time": Date.now() - _s.trial_data.feature_start
+            });
             $("#not_all").hide();
             _s.num_needed_clicked_on = _s.num_needed_clicked_on - 1;
             $( "#svg" + i ).css("padding", "0px");
@@ -82,8 +110,13 @@ function make_slides(f) {
               $(".creature_image").unbind("click");
               $("#click_on_all_targets").hide();
               $("#what_kind_question").show();
+              _s.trial_data.label_start = Date.now();
             }
           } else {
+            _s.trial_data.incorrect_clicks.push({
+              "creature_index": i,
+              "time": Date.now() - _s.trial_data.feature_start
+            });
             //responses[category_type].incorrect_image_clicks.push(Date.now());
           }
         }
@@ -99,6 +132,14 @@ function make_slides(f) {
         this.present = this.present_stack.shift();
       },
       present_handle : function(stim) {
+        _s.trial_data = clone(stim);
+        _s.trial_data["trial_type"] = "prediction";
+        _s.trial_data["trial_number"] = exp.phase;
+        _s.trial_data["trial_start"] = Date.now();
+        _s.trial_data["slider_history"] = [];
+        _s.trial_data["response"] = "";
+        _s.trial_data["rt"] = -1;
+
         all_slides_do_this(stim);
         this.init_sliders();
       },
@@ -107,6 +148,9 @@ function make_slides(f) {
       },
       button : function() {
         if (exp.sliderPost != null) {
+          _s.trial_data.response = _s.trial_data.slider_history[_s.trial_data.slider_history.length - 1].response;
+          _s.trial_data.rt = _s.trial_data.slider_history[_s.trial_data.slider_history.length - 1].time;
+          exp.data_trials.push(clone(_s.trial_data));
           _stream.apply(this);
         } else {
           $(".err").show();
@@ -124,6 +168,7 @@ function make_slides(f) {
           min : 0,
           max : 100,
           slide : function(event, ui) {
+            _s.trial_data.slider_history.push({"response":ui.value/100, "time":Date.now() - _s.trial_data.trial_start});
             exp.sliderPost = ui.value/100;
           }
         });
@@ -154,6 +199,14 @@ function make_slides(f) {
         this.present = this.present_stack.shift();
       },
       present_handle : function(stim) {
+        _s.trial_data = clone(stim);
+        _s.trial_data["trial_type"] = "generic";
+        _s.trial_data["trial_number"] = exp.phase;
+        _s.trial_data["trial_start"] = Date.now();
+        _s.trial_data["slider_history"] = [];
+        _s.trial_data["response"] = "";
+        _s.trial_data["rt"] = -1;
+
         all_slides_do_this(stim);
         this.init_sliders();
       },
@@ -161,8 +214,15 @@ function make_slides(f) {
         exp.phase++;
       },
       button : function() {
-        $(".when").html("");
-        _stream.apply(this);
+        if (exp.sliderPost != null) {
+          _s.trial_data.response = _s.trial_data.slider_history[_s.trial_data.slider_history.length - 1].response;
+          _s.trial_data.rt = _s.trial_data.slider_history[_s.trial_data.slider_history.length - 1].time;
+          exp.data_trials.push(clone(_s.trial_data));
+          $(".when").html("");
+          _stream.apply(this);
+        } else {
+          $(".err").show();
+        }
       },
       init_sliders : function() {
         exp.sliderPost=null;
@@ -176,6 +236,7 @@ function make_slides(f) {
           min : 0,
           max : 100,
           slide : function(event, ui) {
+            _s.trial_data.slider_history.push({"response":ui.value/100, "time":Date.now() - _s.trial_data.trial_start});
             exp.sliderPost = ui.value/100;
           }
         });
@@ -234,8 +295,11 @@ function make_slides(f) {
         exp.data= {
           trials : exp.data_trials,
           system : exp.system,
-          condition : exp.condition
+          //condition : exp.condition
+          subject_information : exp.subj_data
         };
+        exp.experiment_end = Date.now();
+        exp.experiment_duration = exp.experiment_end - exp.experiment_start;
         setTimeout(function() {turk.submit(exp.data);}, 1000);
       }
     });
@@ -244,6 +308,8 @@ function make_slides(f) {
 
 /// init ///
 function init() {
+
+  exp.experiment_start = Date.now();
 
   jquery_extensions();
   $('.slide').hide();
@@ -274,10 +340,16 @@ function init() {
   /*var this_is_really_annoying = exp.slides.prediction.some_thingamajig_wtf_is_going_on.shift(); //why is there an extra function thing at the *beginning* of this array??!!
   var this_is_also_really_annoying = exp.slides.generic.some_thingamajig_wtf_is_going_on.shift();*/
 
-  exp.structure=['i0', 'instructions',
-           'examples', 'prediction', 'generic',
-           'examples', 'prediction', 'generic',
-           'thanks'];
+  exp.structure=['i0', 'instructions'];
+  for (var i=0; i<exp.species.length; i++) {
+    exp.structure.push("examples");
+    exp.structure.push("prediction");
+    exp.structure.push("generic");
+  }
+  exp.structure.push("subj_info");
+  exp.structure.push("thanks");
+
+  $("#click_on_all_targets").show();
   //exp.prog = 0;
   //for (var i=0; i<exp.structure.length; i++) {
   //    var block_type = exp.structure[i];
@@ -341,6 +413,7 @@ function make_categories(exp) {
   }
 
   var species = _.shuffle(["bird", "fish", "flower", "bug"]);
+  exp.species = species;
 
   var feature_proportions = _.shuffle([
     [.1, .1],
