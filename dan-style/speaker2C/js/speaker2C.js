@@ -303,7 +303,7 @@ function make_slides(f) {
         "distractor_proportion": trial_stim.distractor_proportion,
         "feature": trial_stim.feature
       };
-      _s.trial_data["trial_type"] = "generic";
+      _s.trial_data["trial_type"] = "sentences";
       _s.trial_data["trial_number"] = exp.phase;
       //_s.trial_data["trial_start"] = Date.now();
       //_s.trial_data["slider_history"] = [];
@@ -370,6 +370,7 @@ function make_slides(f) {
           var sentence_type = _s.sentence_types[i];
           var trial_data = clone(_s.trial_data);
           console.log(exp.sliderPost["sentence_type"]);
+          trial_data["sentence_type"] = sentence_type;
           trial_data["response"] = exp.sliderPost[sentence_type];
           exp.data_trials.push(trial_data);
         }
