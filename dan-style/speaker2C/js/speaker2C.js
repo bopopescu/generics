@@ -354,6 +354,9 @@ function make_slides(f) {
 
       all_slides_do_this(stim);
     },
+    update_progress : function() {
+      exp.phase++;
+    },
     button: function() {
       var n_responses = 0;
       for (var i=0; i<_s.sentence_types.length; i++) {
