@@ -30,16 +30,24 @@ function make_slides(f) {
         this.present = this.present_stack.shift();
       },
       present_handle : function(stim) {
-        _s.trial_data = clone(stim);
+        var trial_stim = clone(stim);
+        _s.trial_data = {
+          "species":trial_stim.species,
+          "genus":trial_stim.genus,
+          //"examples": trial_stim.examples,
+          "target_proportion": trial_stim.target_proportion,
+          "distractor_proportion": trial_stim.distractor_proportion,
+          "feature": trial_stim.feature
+        };
         _s.trial_data["trial_type"] = "familiarization";
         _s.trial_data["trial_number"] = exp.phase;
-        _s.trial_data["feature_start"] = Date.now();
-        _s.trial_data["label_start"] = -1;
-        _s.trial_data["incorrect_clicks"] = [];
-        _s.trial_data["correct_clicks"] = [];
+        //_s.trial_data["feature_start"] = Date.now();
+        //_s.trial_data["label_start"] = -1;
+        _s.trial_data["incorrect_clicks"] = 0;
+        //_s.trial_data["correct_clicks"] = [];
         _s.trial_data["incorrect_labels"] = [];
         _s.trial_data["response"] = "";
-        _s.trial_data["rt"] = -1;
+        //_s.trial_data["rt"] = -1;
 
         all_slides_do_this(stim);
         $("#click_on_all_targets").show();
@@ -62,31 +70,32 @@ function make_slides(f) {
       },
       button : function() {
         if (this.num_positive_examples == 0) {
-          _s.trial_data.correct_clicks.push({
+          //_s.trial_data.correct_clicks.push("none");
+          /*{
             "creature_index": "none",
             "time": Date.now() - _s.trial_data.feature_start
-          });
+          });*/
           $(".creature_image").unbind("click");
           $("#click_on_all_targets").hide();
           $("#what_kind_question").show();
-          _s.trial_data.label_start = Date.now();
+         // _s.trial_data.label_start = Date.now();
           //$("#set_of_examples").html("");
         } else {
-          _s.trial_data.incorrect_clicks.push({
-            "creature_index": "none",
+          _s.trial_data.incorrect_clicks ++;//.push("none");/*{
+            /*"creature_index": "none",
             "time": Date.now() - _s.trial_data.feature_start
-          });
+          });*/
           $("#not_all").show();
         }
       },
       continue : function() {
         var what_kind_response = $("#what_kind").val();
         if (!is_same(what_kind_response, _s.category_name)) {
-          _s.trial_data.incorrect_labels.push({"label": what_kind_response, "time": Date.now() - _s.trial_data.label_start});
+          _s.trial_data.incorrect_labels.push(what_kind_response);/*{"label": what_kind_response, "time": Date.now() - _s.trial_data.label_start});*/
           $("#what_kind_err").show();
         } else {
           _s.trial_data.response = what_kind_response;
-          _s.trial_data.rt = Date.now() - _s.trial_data.label_start;
+          //_s.trial_data.rt = Date.now() - _s.trial_data.label_start;
           $("#what_kind_err").hide();
           $("#set_of_examples").html("");
           $("#what_kind").val("");
@@ -98,10 +107,10 @@ function make_slides(f) {
         return function() {
           $( "#svg" + i ).unbind("click");
           if (stim.has_property[i]) {
-            _s.trial_data.correct_clicks.push({
+            /*_s.trial_data.correct_clicks += 1;/*{
               "creature_index": i,
               "time": Date.now() - _s.trial_data.feature_start
-            });
+            });*/
             $("#not_all").hide();
             _s.num_needed_clicked_on = _s.num_needed_clicked_on - 1;
             $( "#svg" + i ).css("padding", "0px");
@@ -110,13 +119,13 @@ function make_slides(f) {
               $(".creature_image").unbind("click");
               $("#click_on_all_targets").hide();
               $("#what_kind_question").show();
-              _s.trial_data.label_start = Date.now();
+              //_s.trial_data.label_start = Date.now();
             }
           } else {
-            _s.trial_data.incorrect_clicks.push({
+            _s.trial_data.incorrect_clicks ++;/*{
               "creature_index": i,
               "time": Date.now() - _s.trial_data.feature_start
-            });
+            });*/
             //responses[category_type].incorrect_image_clicks.push(Date.now());
           }
         }
@@ -132,13 +141,21 @@ function make_slides(f) {
         this.present = this.present_stack.shift();
       },
       present_handle : function(stim) {
-        _s.trial_data = clone(stim);
+        var trial_stim = clone(stim);
+        _s.trial_data = {
+          "species":trial_stim.species,
+          "genus":trial_stim.genus,
+          //"examples": trial_stim.examples,
+          "target_proportion": trial_stim.target_proportion,
+          "distractor_proportion": trial_stim.distractor_proportion,
+          "feature": trial_stim.feature
+        };
         _s.trial_data["trial_type"] = "prediction";
         _s.trial_data["trial_number"] = exp.phase;
-        _s.trial_data["trial_start"] = Date.now();
-        _s.trial_data["slider_history"] = [];
+        //_s.trial_data["trial_start"] = Date.now();
+        //_s.trial_data["slider_history"] = [];
         _s.trial_data["response"] = "";
-        _s.trial_data["rt"] = -1;
+        //_s.trial_data["rt"] = -1;
 
         all_slides_do_this(stim);
         this.init_sliders();
@@ -148,8 +165,8 @@ function make_slides(f) {
       },
       button : function() {
         if (exp.sliderPost != null) {
-          _s.trial_data.response = _s.trial_data.slider_history[_s.trial_data.slider_history.length - 1].response;
-          _s.trial_data.rt = _s.trial_data.slider_history[_s.trial_data.slider_history.length - 1].time;
+          _s.trial_data.response = exp.sliderPost;//_s.trial_data.slider_history[_s.trial_data.slider_history.length - 1].response;
+          //_s.trial_data.rt = _s.trial_data.slider_history[_s.trial_data.slider_history.length - 1].time;
           exp.data_trials.push(clone(_s.trial_data));
           _stream.apply(this);
         } else {
@@ -168,7 +185,7 @@ function make_slides(f) {
           min : 0,
           max : 100,
           slide : function(event, ui) {
-            _s.trial_data.slider_history.push({"response":ui.value/100, "time":Date.now() - _s.trial_data.trial_start});
+            //_s.trial_data.slider_history.push({"response":ui.value/100, "time":Date.now() - _s.trial_data.trial_start});
             exp.sliderPost = ui.value/100;
           }
         });
@@ -199,13 +216,21 @@ function make_slides(f) {
         this.present = this.present_stack.shift();
       },
       present_handle : function(stim) {
-        _s.trial_data = clone(stim);
+        var trial_stim = clone(stim);
+        _s.trial_data = {
+          "species":trial_stim.species,
+          "genus":trial_stim.genus,
+          //"examples": trial_stim.examples,
+          "target_proportion": trial_stim.target_proportion,
+          "distractor_proportion": trial_stim.distractor_proportion,
+          "feature": trial_stim.feature
+        };
         _s.trial_data["trial_type"] = "generic";
         _s.trial_data["trial_number"] = exp.phase;
-        _s.trial_data["trial_start"] = Date.now();
-        _s.trial_data["slider_history"] = [];
+        //_s.trial_data["trial_start"] = Date.now();
+        //_s.trial_data["slider_history"] = [];
         _s.trial_data["response"] = "";
-        _s.trial_data["rt"] = -1;
+        //_s.trial_data["rt"] = -1;
 
         all_slides_do_this(stim);
         this.init_sliders();
@@ -215,8 +240,9 @@ function make_slides(f) {
       },
       button : function() {
         if (exp.sliderPost != null) {
-          _s.trial_data.response = _s.trial_data.slider_history[_s.trial_data.slider_history.length - 1].response;
-          _s.trial_data.rt = _s.trial_data.slider_history[_s.trial_data.slider_history.length - 1].time;
+          _s.trial_data.response = exp.sliderPost;
+          //_s.trial_data.response = _s.trial_data.slider_history[_s.trial_data.slider_history.length - 1].response;
+          //_s.trial_data.rt = _s.trial_data.slider_history[_s.trial_data.slider_history.length - 1].time;
           exp.data_trials.push(clone(_s.trial_data));
           $(".when").html("");
           _stream.apply(this);
@@ -236,7 +262,7 @@ function make_slides(f) {
           min : 0,
           max : 100,
           slide : function(event, ui) {
-            _s.trial_data.slider_history.push({"response":ui.value/100, "time":Date.now() - _s.trial_data.trial_start});
+            //_s.trial_data.response = ui.value/100;
             exp.sliderPost = ui.value/100;
           }
         });
@@ -268,15 +294,16 @@ function make_slides(f) {
       button : function(e){
         if (e.preventDefault) e.preventDefault();
         exp.subj_data =
-          [{
+          {
             language: $('select[name="language"]').val(),
             enjoyment: $('select[name="enjoyment"]').val(),
             assess: $('input[name="assess"]:checked').val(),
             age : $('input:text[name="age"]').val(),
             sex : $('input[name="sex"]:checked').val(),
             education : $('select[name="education"]').val(),
-            workerId : turk.workerId
-          }];
+            //comments : $('select[name="comments"]').val()
+            //workerId : turk.workerId
+          };
 
         exp.go();
         return false;
@@ -298,9 +325,18 @@ function make_slides(f) {
           //condition : exp.condition
           subject_information : exp.subj_data
         };
-        exp.experiment_end = Date.now();
-        exp.experiment_duration = exp.experiment_end - exp.experiment_start;
-        setTimeout(function() {turk.submit(exp.data);}, 1000);
+        exp.data.experiment_start = exp.experiment_start;
+        exp.data.experiment_end = Date.now();
+        exp.data.experiment_duration = exp.data.experiment_end - exp.experiment_start;
+        //setTimeout(function() {turk.submit({"hi": 1})}, 1000);
+        setTimeout(function() {turk.submit({
+          "trials": JSON.stringify(exp.data_trials),
+          "subject_information": JSON.stringify(exp.subj_data),
+          "system" : JSON.stringify(exp.system)
+          //"subject_information": exp.subj_data,
+          //"system": exp.system
+        })}, 1000);
+        //setTimeout(function() {turk.submit(JSON.stringify(exp.data));}, 1000);
       }
     });
   return slides;
@@ -364,19 +400,32 @@ function init() {
   //set_condition();
 
   //allow to click through experiment
-  exp.debug=1;
-  if (exp.debug){
+  exp.debug=0;
+
+  $("#start-button").click(function() {
+    if (exp.debug || !turk.previewMode) {
+      exp.go();
+    } else {
+      alert("You must accept the HIT in order to continue.");
+    }
+  });
+  /*if (exp.debug){
     console.log('debug');
     $('#start-button').click(function(){exp.go();});
   }
-  else{
-    $('#start-button').click(function(){experiment_proceed();});
-  }
+  else if (!turk.previewMode) {
+    $('#start-button').click(function(){
+      exp.go();
+      //experiment_proceed();
+    });
+  } else {
+    alert("you must accept the HIT in order to continue");
+  }*/
 
   exp.system =
     [{
-      workerId : turk.workerId,
-      cond : exp.condition,
+      //workerId : turk.workerId,
+      //cond : exp.condition,
       Browser : BrowserDetect.browser,
       OS : BrowserDetect.OS,
       screenH: screen.height,
