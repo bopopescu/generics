@@ -355,15 +355,26 @@ function make_slides(f) {
       all_slides_do_this(stim);
     },
     button: function() {
+      var n_responses = 0;
       for (var i=0; i<_s.sentence_types.length; i++) {
         var sentence_type = _s.sentence_types[i];
-        var trial_data = clone(_s.trial_data);
-        console.log(exp.sliderPost["sentence_type"]);
-        trial_data["response"] = exp.sliderPost[sentence_type];
-        exp.data_trials.push(trial_data);
+        if (exp.sliderPost[sentence_type] != null) {
+          n_responses++
+        }
       }
-      $(".when").html("Next she says,");
-      _stream.apply(_s);
+      if (n_responses == _s.sentence_types.length) {
+        for (var i=0; i<_s.sentence_types.length; i++) {
+          var sentence_type = _s.sentence_types[i];
+          var trial_data = clone(_s.trial_data);
+          console.log(exp.sliderPost["sentence_type"]);
+          trial_data["response"] = exp.sliderPost[sentence_type];
+          exp.data_trials.push(trial_data);
+        }
+        $(".when").html("Next she says,");
+        _stream.apply(_s);
+      } else {
+        $(".err").show();
+      }
     }
   });
   
