@@ -1,0 +1,60 @@
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>Alien Biodiversity Study: Study 2A</title>
+  <meta name="viewport" content="initial-scale=1.0">
+  <link rel="stylesheet" href="erin_style.css" />
+  <link rel="stylesheet" href="jquery-ui.css"/>
+</head> 
+<body>
+
+<div>
+<p>THIS HIT IS FOR A SPECIFIC WORKER.</p>
+<p>If you have not communicated with me via email, then this HIT is *NOT* for you. Please do not try it.</p>
+<p>If we have communicated about this HIT, please enter the passcode here: <input type="text" id="password"></input></p>
+<p id="err">WRONG!! This HIT is not for you. Please go do a different HIT.</p>
+<p id="thank_you">thank you! submitting to turk...</p>
+<button onclick="check()">Submit</button>
+</div>
+
+<!-- Scripts -->
+<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="jquery-ui-1.10.4.min.js"></script>
+<script src="mmturkey.js"></script>
+<script src="raphael.js"></script>
+<script src="ecosystem.js"></script>
+<script src="browserCheck.js"></script>
+<script>
+  $("#err").hide();
+  $("#thank_you").hide();
+  check = function() {
+    var pw = $("#password").val();
+    if (pw.length == 13) {
+      if (pw[0] == "e") {
+        l = pw[1];
+        h = pw[5];
+        g = pw[6];
+        k = pw[2];
+        f = pw[7];
+        e = pw[8];
+        d = pw[9];
+        c = pw[10];
+        b = pw[11];
+        j = pw[3];
+        i = pw[4];
+        a = pw[12];
+        m = pw[0];
+        if (a == "y" && i == " " && h == "i" && j=="n" && c=="r" && (b+f+m+d+l+e+g+k) == "r eorssi") {
+          setTimeout(function() { turk.submit({"good_worker": true})}, 1000);
+          $("#thank_you").show();
+        } else {
+          $("#err").show();
+        }
+      }
+    } else {
+      $("#err").show();
+    }
+  }
+</script>
+</body>
+</html>
