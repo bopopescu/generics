@@ -1,0 +1,289 @@
+<html>
+  <head>
+    <title>
+      Alien Biodiversity Study 2B
+    </title>
+
+    <!--JS-->
+
+    <!-- general utilities -->
+    <script src="../_shared/js/jquery-min.js "></script>
+    <script src="../_shared/js/underscore-min.js"></script>
+    <script src="../_shared/js/underscore.string.min.js"></script>
+    <script src="../_shared/js/turk.js"></script>
+    <script src="../_shared/js/browser.detect.js"></script>
+    <script src="../_shared/js/utils.js"></script>
+    <script src="../_shared/js/jquery-ui.js"></script>
+    <script src="../_shared/js/sprintf-.7.js"></script>
+    <script src="../_shared/js/seedrandom.js"></script>
+    <script src="../_shared/js/ecosystem.js"></script>
+    <script src="../_shared/js/raphael-min.js"></script>
+
+    <!-- experiment specific helper functions -->
+    <script src="js/local-utils.js"></script>
+
+    <!-- experiment utilities -->
+    <script src="../_shared/js/exp.js"></script>
+    <script src="../_shared/js/stream.js"></script>
+
+    <!-- filter subjects -->
+    <script src="../_shared/js/prune_ss.js"></script>
+
+    <!-- experiment file -->
+    <script src="js/speaker2C.js"></script>
+
+
+    <!--CSS-->
+    <link href="http://code.jquery.com/ui/1.9.1/themes/overcast/jquery-ui.css" rel="stylesheet" type="text/css"/>
+    <link href="../_shared/css/table/style.css" rel="stylesheet" type="text/css"/>
+    <link href="../_shared/css/style.css" rel="stylesheet" type="text/css"/>
+    <link href="../_shared/css/curtain.css" rel="stylesheet" type="text/css"/>
+    <link href="../_shared/css/style_within.css" rel="stylesheet" type="text/css"/>
+    <link href="../_shared/css/form.css" rel="stylesheet" type="text/css"/>
+    <link href="css/local-style.css" rel="stylesheet" type="text/css"/>
+
+  </head>
+
+  <body onload="init();" style="visibility:hidden">
+    <noscript>This task requires JavaScript.</noscript>
+
+    <div id="exp" class="exp">
+      <div class="slide_wrapper">
+        <div class="progress">
+          <span>Progress:</span>
+          <div class="bar-wrapper">
+            <div class="bar" width="0%">
+            </div>
+          </div>
+        </div>
+
+        <div class="slide" id="i0" >
+          <img src="../_shared/img/stanford.png" style="margin-top: 10px">
+          <p style="text-align: center; font-weight: bold">Stanford COCO Lab</p>
+          <p class="block-text">In this experiment, you will see some flora and fauna from an "alien planet" and be asked to evaluate potential descriptions.</p>
+          <p class="block-text">This experiment should take about 8 minutes to complete.</b></p>
+          <p class="block-text">We try hard to make our HITs enjoyable, so please reward us by paying attention and reading our instructions and questions carefully.</p>
+          <p class="block-text">Thank you!</p>
+          <button id="start-button" type="button">Start Experiment</button>
+          <p style="font-size: 0.8em" class="block-text" id="legal">Legal information: By answering the following questions, you are participating in a study being performed by cognitive scientists in the Stanford Department of Psychology. If you have questions about this research, please contact Erin Bennett at <a href="mailto://erindb@stanford.edu">erindb@stanford.edu</a> or Noah Goodman, at ngoodman@stanford.edu. You must be  at least 18 years old to participate. Your participation in this research is voluntary. You may decline to answer any or all of the following questions. You may decline further participation, at any time, without adverse consequences. Your anonymity is assured; the researchers who have requested your participation will not receive any personal information about you.</p>
+        </div>
+
+        <div id="instructions" class="slide">
+          <h3>Instructions</h3>
+          <p>In this experiment, we would like you to imagine that an alien planet has been discovered!</p>
+          <p>Scientist Sally has been studying the kinds of species on this planet. She is going on a hike with you, to show you the different kinds of species.</p>
+          <p>Please click "Begin" when you're ready to start.</p>
+          <button type="button" onclick="_s.button();">Begin</button>
+        </div>
+
+        <div id="examples" class="slide">
+          <div class="lower">
+            <p>You and Scientist Sally <!-- <span class="temporal_adverb">{{}}</span> --> go to the habitat of the <span class="WUGS">{{}}</span>. <span class="cap_WUGS">{{}}</span> are a kind of <span class="BIRD">{{}}</span>. Here are the <span class="WUGS">{{}}</span> that you see.</p>
+            <p>Please study the <span class="WUGS">{{}}</span> carefully. Pay particular attention to their <span class="TAILS">{{}}</span>.</p>
+            <div id="set_of_examples"></div>
+              <br/>
+            <div class="question" id="what_kind_question">
+              <p>What kind of <span class="BIRDS">{{}}</span> are these? <input class="to_clear" type="text" id="what_kind"></input></p>
+              <button type="button" class="space" onclick="_s.continue();">Continue</button>
+              <p class="err" id="what_kind_err">That's not what kind of <span class="BIRDS">{{}}</span> these are. Please check that you spelled your response correctly. You only need to give the name of the kind of <span class="BIRDS">{{}}</span>. Answer in one word.</p>
+            </div>
+            <div class="question" id="click_on_all_targets">
+              <p>First, please click on all of the <span class="WUGS">{{}}</span> that have <span class="TAILS">{{}}</span></p>
+              <button type="button" class="space" onclick="_s.button();">I don't see any <span class="WUGS">{{}}</span> with <span class="TAILS">{{}}</span></button>
+              <p class="err" id="not_all">There are more <span class="WUGS">{{}}</span> with <span class="TAILS">{{}}</span>! Please click on all of them.</p>
+            </div>
+          </div>
+        </div>
+
+        <div id="prediction" class="slide">
+          <div class="lower">
+            <p>Imagine you saw another 100 <span class="WUGS">{{}}</span>. How many of them do you think would have <span class="TAILS">{{}}</span>?</p>
+            <div class="slider_section">
+              <div class="slider_meaning_container">
+                <div class="left_slider_meaning">0</div>
+                <div class="right_slider_meaning">100</div>
+              </div>
+              <br/>
+              <div class="slider_container" id="prediction_slider_container"></div>
+              <br/>
+            </div>
+            <button type="button" class="space" onclick="_s.button();">Continue</span></button>
+            <p class="err">Please make sure to adjust the slider before continuing. Click on the bar to make the slider handle appear.</p>
+          </div>
+        </div>
+
+        <div class="slide" id="sentences">
+          <p><span class="when">{{}}</span></p>
+          <p><strong>"<span class="cap_WUGS">{{}}</span> _____________."</strong></p>
+          <!-- have <span class="target_features">{{}}</span> -->
+          <p>Please click on the slider bars below to indicate how likely do you think it is that Scientist Sally would complete her sentence in each of the following ways.</p>
+
+          <!-- <button type="button" id="reminder">Remind me what the <span class="categories">{{}}</span> looked like!</button>
+          <div id="smaller_creature_images" class="creature_images"></div>
+          <button type="button" id="i_remember_now">OK, I remember now.</button> -->
+
+          <table><tbody id="slider_table"></tbody></table>
+          <button type="button" class="space" onclick="_s.button();">Continue</button>
+          <p class="err">Please make sure to adjust all the sliders before continuing. Click on the bars to make the sliders appear.</p>
+        </div>
+
+        <div class="slide" id="generic">
+          <div class="lower">
+            <p class="when">{{}}</p>
+            <p>How likely do you think it is that Scientist Sally would say the following sentence?</p>
+            <p><strong>"<span class="cap_WUGS">{{}}</span> have <span class="TAILS">{{}}</span>.</strong></p>
+            <!-- <button type="button" onclick="_s.reminder()">Remind me what the <span class="WUGS">{{}}</span> looked like!</button>
+            <div id="smaller_examples" class="creature_images"></div>
+            <button type="button" onclick="_s.i_remember_now()">OK, I remember now.</button> -->
+            <div class="slider_section">
+              <div class="slider_meaning_container">
+                <div class="left_slider_meaning">very unlikely</div>
+                <div class="right_slider_meaning">very likely</div>
+              </div>
+              <br/>
+              <div class="slider_container" id="generic_slider_container"></div>
+              <br/>
+            </div>
+            <button type="button" class="space" onclick="_s.button()">Continue</button>
+            <p class="err">Please make sure to adjust the slider before continuing. Click on the bar to make the slider handle appear.</p>
+          </div>
+        </div>
+
+        <div class="slide js"  id="subj_info">
+          <div>
+            <form id="subj_info_form">
+              <div class="long_form">
+                <fieldset>
+                  <legend>Additional information</legend>
+                  <p class="info">
+                    Answering these questions is optional, but will help us understand your answers.</p>
+
+                  <p>Did you read the instructions and do you think you did
+                    the HIT correctly?</p>
+                  <label>
+                    <input type="radio"  name="assess" value="No"/>
+                    No
+                  </label>
+                  <label>
+                    <input type="radio"  name="assess" value="Yes"/>
+                    Yes
+                  </label>
+                  <label>
+                    <input type="radio"  name="assess" value="Confused"/>
+                    I was confused
+                  </label>
+
+                  <p>Sex</p>
+
+                  <label>
+                    <input type="radio" name="sex" value="Male"/>
+                    Male
+                  </label>
+                  <label>
+                    <input type="radio" name="sex" value="Female"/>
+                    Female
+                  </label>
+
+                  <p>Age</p>
+                  <input type="text" name="age" value="0"/>
+
+                  <p>Level Of Education</p>
+                  <select name="education">
+                    <label>
+                      <option name="education" value="-1"/>
+
+                    </label>
+                    <label>
+                      <option name="education" value="0"/>
+                      Some High School
+                    </label>
+                    <label>
+                      <option name="education" value="1"/>
+                      Graduated High School
+                    </label>
+                    <label>
+                      <option name="education" value="2"/>
+                      Some College
+                    </label>
+                    <br/>
+                    <label>
+                      <option name="education" value="3"/>
+                      Graduated College
+                    </label>
+                    <label>
+                      <option name="education" value="4"/>
+                      Hold a higher degree
+                    </label>
+                  </select>
+
+                  <p>Native Language</p>
+                  <label>
+                    <option  value="-1"/>
+
+                  </label>
+                  <select name="language">
+                    <label>
+                      <option value="NA"/>
+                    </label>
+                    <label>
+                      <option  value="English"/>
+                      English
+                    </label>
+                    <label>
+                      <option  value="Spanish"/>
+                      Spanish
+                    </label>
+                    <label>
+                      <option  value="French"/>
+                      French
+                    </label>
+                    <br/>
+                    <label>
+                      <option  value="Mandarin"/>
+                      Mandarin
+                    </label>
+                    <label>
+                      <option  value="German"/>
+                      German
+                    </label>
+                    <label>
+                      <option  value="Other"/>
+                      Other
+                    </label>
+                  </select>
+
+                  <p>Did you enjoy the hit?</p>
+                  <select name="enjoyment">
+                    <option value="-1"></option>
+                    <option value="0">Worse than the Average HIT</option>
+                    <option value="1" >An Average HIT</option>
+                    <option value="2">Better than average HIT</option>
+                  </select>
+
+	  <!--<p>We would be interested in any comments you have about this experiment. Please type them here:</p>
+                  <p><textarea rows="7" cols="70" name="comments"></textarea></p>
+-->
+                </fieldset>
+
+                <button type="submit">Submit</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div id="thanks" class="slide js" >
+          <p  class="big">Thanks for your Time!<br/></p>
+          <p id="bonus_feedback" class="big"><p>
+        </div>
+
+        <div id="progress">
+          <h2 style="margin-bottom:10px">Progress</h2>
+          <p id="phase" class="progress_text"></p>
+
+          <div id="pb1"></div>
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>
