@@ -6,40 +6,33 @@
 
     <!--JS-->
 
-    <!-- general utilities -->
-    <script src="../_shared/js/jquery-min.js "></script>
+    <!-- external general utilities -->
+    <script src="../_shared/js/jquery-1.11.1.min.js "></script>
+    <script src="../_shared/full-projects/jquery-ui/jquery-ui.min.js"></script>
     <script src="../_shared/js/underscore-min.js"></script>
-    <script src="../_shared/js/underscore.string.min.js"></script>
-    <script src="../_shared/js/turk.js"></script>
-    <script src="../_shared/js/browser.detect.js"></script>
-    <script src="../_shared/js/utils.js"></script>
-    <script src="../_shared/js/jquery-ui.js"></script>
-    <script src="../_shared/js/sprintf-.7.js"></script>
-    <script src="../_shared/js/seedrandom.js"></script>
-    <script src="../_shared/js/ecosystem.js"></script>
+    <!-- if you want to draw stuff: -->
     <script src="../_shared/js/raphael-min.js"></script>
 
+    <!-- cocolab experiment logic -->
+    <script src="../_shared/js/exp-V2.js"></script>
+    <script src="../_shared/js/stream-V2.js"></script>
+
+    <!-- cocolab general utilities -->
+    <script src="../_shared/js/mmturkey.js "></script>
+    <script src="../_shared/js/browserCheck.js"></script>
+    <!-- if you want to draw cute creatures (depends on raphael): -->
+    <script src="../_shared/js/ecosystem.js"></script>
+
     <!-- experiment specific helper functions -->
+    <script src="../_shared/js/utils.js"></script>
     <script src="js/local-utils.js"></script>
-
-    <!-- experiment utilities -->
-    <script src="../_shared/js/exp.js"></script>
-    <script src="../_shared/js/stream.js"></script>
-
-    <!-- filter subjects -->
-    <script src="../_shared/js/prune_ss.js"></script>
 
     <!-- experiment file -->
     <script src="js/speaker2C.js"></script>
 
-
     <!--CSS-->
-    <link href="http://code.jquery.com/ui/1.9.1/themes/overcast/jquery-ui.css" rel="stylesheet" type="text/css"/>
-    <link href="../_shared/css/table/style.css" rel="stylesheet" type="text/css"/>
-    <link href="../_shared/css/style.css" rel="stylesheet" type="text/css"/>
-    <link href="../_shared/css/curtain.css" rel="stylesheet" type="text/css"/>
-    <link href="../_shared/css/style_within.css" rel="stylesheet" type="text/css"/>
-    <link href="../_shared/css/form.css" rel="stylesheet" type="text/css"/>
+    <link href="../_shared/full-projects/jquery-ui/jquery-ui.min.css" rel="stylesheet" type="text/css"/>
+    <link href="../_shared/css/cocolab-style.css" rel="stylesheet" type="text/css"/>
     <link href="css/local-style.css" rel="stylesheet" type="text/css"/>
 
   </head>
@@ -58,7 +51,7 @@
         </div>
 
         <div class="slide" id="i0" >
-          <img src="../_shared/img/stanford.png" style="margin-top: 10px">
+          <img src="../_shared/images/stanford.png" style="margin-top: 10px">
           <p style="text-align: center; font-weight: bold">Stanford COCO Lab</p>
           <p class="block-text">In this experiment, you will see some flora and fauna from an "alien planet" and be asked to evaluate potential descriptions.</p>
           <p class="block-text">This experiment should take about 8 minutes to complete.</b></p>
@@ -276,12 +269,12 @@
           <p id="bonus_feedback" class="big"><p>
         </div>
 
-        <div id="progress">
+        <!-- <div id="progress">
           <h2 style="margin-bottom:10px">Progress</h2>
           <p id="phase" class="progress_text"></p>
 
           <div id="pb1"></div>
-        </div>
+        </div> -->
       </div>
     </div>
 

@@ -445,10 +445,10 @@ function init() {
 
   exp.experiment_start = Date.now();
 
-  jquery_extensions();
+  //jquery_extensions();
   $('.slide').hide();
   $('body').css('visibility','visible');
-  exp_sizing();
+  //exp_sizing();
 
   //exp.nQs = 25;
   exp.num_examples = 10;

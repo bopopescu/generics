@@ -1,0 +1,54 @@
+/*BOTH CURTAIN IMAGES CLASS*/
+img.curtain{
+    height:300px; /* so jQuery doesn't keep ascpect ration when animating the width '*/
+    z-index:99; /* to show it on top of the content*/
+}
+
+/*LEFT CURTAIN IMAGE CLASS*/
+img.curtainLeft{
+    position:absolute; /*absolute positioning is important*/
+    left:0px; /*position it on left side of the container*/
+}
+
+/*RIGHT CURTAIN IMAGE CLASS*/
+img.curtainRight{
+    position:absolute; /*absolute positioning is important*/
+    right:0px; /*position it on the right side of the container*/
+}
+
+/*THE CLASS OF THE WRAPPING DIV (THAT WRAPS EVERYTHING)*/
+.curtain_wrapper{
+    width:400px; /* same as width of both the images summed */
+    height:300px; /* same as height of the images*/
+    position:absolute;
+    display:none;
+    /* position:relative; /\*relative position so we can absolutely position the child elements*\/ */
+    /* overflow:hidden;  *//*hide everything out of boundaries (in this case for the description div)*/
+    /* color:white; /\* just styling*\/ */
+    /* background:black; /\* just styling*\/ */
+
+}
+
+/*THE TEXT DIV CLASS (BEHIND THE CURTAINS)*/
+.content{
+    position:relative; /*so we can center it*/
+    width: 300px; /*curtain_wrapper width - shrinked image width (50px is image when shrinked)*/
+    margin:0px auto; /*center it*/
+    display:none; /*we don't want our users to see the content while the curtain images are loading*/
+}
+
+/*DESCRIPTION DIV CLASS (THE TEXT ON TOP LEFT SIDE IN THE DEMO)*/
+.description{
+    position:absolute; /*absolute position is important*/
+    top:0px; /*position it on top of the curtain_wrapper*/
+    z-index:100; /*show it on top of the curtain (remember that they have z-index of 99)*/
+    /*styling bellow*/
+    padding:5px;
+    text-align:center;
+    font-size:15px;
+    background:#eee;
+    border:1px solid #ccc;
+    border-left:0px;
+    border-top:0px;
+    color:black;
+}
