@@ -24,7 +24,7 @@ ggplot(generic, aes(x=distractor_proportion, y=response, colour=factor(target_pr
   )
 ggsave(file="speaker2B-generic-individuals.pdf", width=10, height=6, title=graph_title)
 
-graph_title = "Mean Endorsement of Generic"
+graph_title = "2B Mean Endorsement of Generic"
 generic_summary = summarySE(generic, measurevar="response", groupvars=c("target_proportion", "distractor_proportion"))
 ggplot(generic_summary, aes(x=distractor_proportion, y=response, colour=factor(target_proportion))) +
   geom_point(stat="identity", size=3) +
@@ -35,7 +35,7 @@ ggplot(generic_summary, aes(x=distractor_proportion, y=response, colour=factor(t
     plot.background = element_blank()
     ,panel.grid.minor = element_blank()
   )
-ggsave(file="speaker2B-generic-means.pdf", width=10, height=6, title=graph_title)
+ggsave(file="2B_mean.pdf", width=10, height=6, title=graph_title)
 # # 
 # # # better x and y axis choices for cleaner graph with mean of normalized data
 # # normed_sentence_summary = summarySE(individuals, measurevar="normed_response", groupvars=c("numeric_context", "sentence_type", "category"))

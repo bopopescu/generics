@@ -160,14 +160,16 @@ sentence_summary$distractor_proportion[sentence_summary$numeric_context == 50 & 
 sentence_summary$distractor_proportion[sentence_summary$numeric_context == 50 & sentence_summary$category=="distractor (percent positive=context)"] = 0.5
 sentence_summary$distractor_proportion[sentence_summary$numeric_context == 90 & sentence_summary$category=="target (percent positive=50%)"] = 0.9
 sentence_summary$distractor_proportion[sentence_summary$numeric_context == 90 & sentence_summary$category=="distractor (percent positive=context)"] = 0.5
+
+graph_title = "2A Mean Endorsement of Generic and Frequency Sentences"
 ggplot(sentence_summary, aes(x=distractor_proportion, y=response)) +
   geom_point(aes(colour=factor(target_proportion)), stat="identity", size=point_size) +
   geom_errorbar(aes(ymin=response-ci, ymax=response+ci, colour=factor(target_proportion)), width=.03) +
-  ggtitle("2A Individual Unnormalized Speaker Measure Responses") +
+  ggtitle(graph_title) +
   facet_grid(~sentence_type) +
   theme_bw(18) +
   theme(
     plot.background = element_blank()
     ,panel.grid.minor = element_blank()
   )
-ggsave(file="2A_mean.pdf", width=20, height=5, title="2A Individual Unnormalized Speaker Measure Responses")
+ggsave(file="2A_mean.pdf", width=20, height=5, title=graph_title)
