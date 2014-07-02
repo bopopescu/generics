@@ -1,0 +1,16 @@
+workerid	language	enjoyment	age	sex	assess	education
+0	English	1	35	Female	Yes	3
+1	English	2	35	Female	Yes	3
+2	English	2	24	Male	Yes	2
+3	English	2	53	Female	Yes	2
+4	English	2	23	Male	Yes	3
+5	Other	2	44	Female	Yes	2
+6	English	1	65	Male	Yes	2
+7	English	2	33	Male	Yes	2
+8	English	2	30	Male	Yes	2
+9	English	2	33	Female	Yes	2
+10	English	1	24	Male	Yes	3
+11	English	2	25	Female	Yes	2
+12	English	2	31	Female	Yes	2
+13	English	1	27	Male	Yes	3
+14	English	2	27	Female	Yes	3

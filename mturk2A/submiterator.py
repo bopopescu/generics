@@ -8,10 +8,10 @@ for line in lines:
     if not (line == "\n" or line == ""):
         while (line[0] == "\n" or line[0] == "\t" or line[0] == " "):
             line = line[1:]
-        if not (line[0:3] == "&&&"):
+        if not (line[0:3] == "###"):
             x=line.split("::")
             key = x[0]
-            possvalues = x[1].split("&&&")
+            possvalues = x[1].split("###")
             value = possvalues[0]
             while (key[0] == "\n" or key[0] == "\t" or key[0] == " "):
                 key = key[1:]

@@ -1,0 +1,21 @@
+workerid	screenH	screenUW	screenUH	screenW	OS	Browser
+0	704	800	600	1005	Windows	Firefox
+1	864	800	600	1536	Windows	Chrome
+2	800	800	600	1280	Mac	Safari
+3	1050	800	600	1680	Windows	Chrome
+4	768	800	600	1024	Windows	Firefox
+5	640	800	600	1138	Windows	Firefox
+6	1024	800	600	1280	Linux	Chrome
+7	1280	800	600	2277	Windows	Firefox
+8	768	800	600	1366	Windows	Chrome
+9	768	800	600	1366	Windows	Chrome
+10	1320	800	600	2347	Windows	Firefox
+11	800	800	600	1280	Mac	Safari
+12	750	800	600	1333	Windows	Firefox
+13	768	800	600	1280	Windows	Chrome
+14	864	800	600	1536	Windows	Firefox
+15	900	800	600	1600	Windows	Chrome
+16	1024	800	600	768	an unknown OS	Safari
+17	1050	800	600	1680	Windows	Chrome
+18	768	800	600	1024	Windows	Chrome
+19	900	800	600	1600	Windows	Mozilla
