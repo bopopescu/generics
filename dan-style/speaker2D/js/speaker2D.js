@@ -604,7 +604,7 @@ function make_categories(exp) {
         "has_property": [],
         "examples": [],
         "target_proportion": feature_proportions[species_index][1],
-        "distractor_proportion": ".5 and " + feature_proportions[species_index][1],
+        "distractor_proportion": feature_proportions[species_index][0],
         "feature": target_features[species[species_index]][target_feature_index[species_index]]
       },
       { /* distractor */
@@ -614,7 +614,17 @@ function make_categories(exp) {
         "has_property": [],
         "examples": [],
         "target_proportion": feature_proportions[species_index][1],
-        "distractor_proportion": ".5 and " + feature_proportions[species_index][1],
+        "distractor_proportion": feature_proportions[species_index][0],
+        "feature": target_features[species[species_index]][target_feature_index[species_index]]
+      },
+      { /* distractor */
+        "species": species[species_index],
+        "creature_generator": new Ecosystem.Genus(species[species_index], {var: 0.3}),
+        "genus": nonce_words.shift(),
+        "has_property": [],
+        "examples": [],
+        "target_proportion": feature_proportions[species_index][1],
+        "distractor_proportion": feature_proportions[species_index][0],
         "feature": target_features[species[species_index]][target_feature_index[species_index]]
       }
     ]);
