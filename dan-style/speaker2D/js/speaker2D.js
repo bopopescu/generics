@@ -491,7 +491,7 @@ function init() {
   exp.structure.push("subj_info");
   exp.structure.push("thanks");
 
-  exp.nQs = exp.species.length * 5;
+  exp.nQs = exp.species.length * 6;
 
   $("#click_on_all_targets").show();
   //exp.prog = 0;
@@ -628,7 +628,7 @@ function make_categories(exp) {
         "feature": target_features[species[species_index]][target_feature_index[species_index]]
       }
     ]);
-    for (var g=0; g<3; g++) {
+    for (var g=0; g<4; g++) {
       var unshuffled_has_property = [];
       var num_positive_examples = Math.round(genus[species_index][g].target_proportion * exp.num_examples);
       genus[species_index][g].num_positive_examples = num_positive_examples;
