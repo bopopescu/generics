@@ -1,5 +1,6 @@
 library("ggplot2")
 library("bear")
+library("plyr")
 
 df = read.table("speaker2A.csv", sep="\t", header=T)
 df = df[,c("reminder_target", "posterior_order", "comments",
@@ -19,267 +20,156 @@ df$category[df$category == "context_category0"] = "context"
 df$category[df$category == "context_category1"] = "context"
 df$category = as.factor(df$category)
 
-df$response = as.numeric(as.character(df$response))
+df$category = factor(df$category, levels=c("target", "context"), labels=c("target (percent positive=50%)", "distractor (percent positive=context)"))
+df$context = factor(df$context, levels=c("lower", "a_bit_lower", "same", "higher"), labels=c("10", "30", "50", "90"))
+df$numeric_context = as.numeric(as.character(df$context))
 
-df = ddply(df, .(workerid, trial_type, category_type), transform, normed_response = response / sum(response))
+###### name check: how did Ss echo back the names of the creatures
 
-# ratings = subset(df, trial_type == "speaker_ratings")
-# ratings$response = as.numeric(as.character(ratings$response))
-# ratings_summary = summarySE(ratings, measurevar="response", groupvars=c("context", "sentence_type", "category", "amount_positive_examples"))
-# ratings_summary$context = factor(ratings_summary$context, levels=c("higher", "same", #"a_bit_lower",
-#                                                                    "lower"))
-# 
-# target_generic = subset(ratings_summary, category == "target" & sentence_type == "generic")
-# ggplot(target_generic, aes(x=context, y=response, fill=context)) +
-#   geom_bar(position=position_dodge(.9), stat="identity", width=.9) +
-#   #facet_wrap(~ category) +
-#   #theme_bw(24) +
-#   ggtitle("endorsement of generic for target items (50%)") +
-#   geom_errorbar(aes(ymin=response-ci, ymax=response+ci), width=.1, position=position_dodge(.9))
-# ggsave(file="target-generic.pdf", width=10, height=6)
-# 
-# distractor_generic = subset(ratings_summary, category == "context" & sentence_type == "generic")
-# ggplot(distractor_generic, aes(x=amount_positive_examples, y=response, fill=amount_positive_examples)) +
-#   geom_bar(position=position_dodge(.9), stat="identity", width=.9) +
-#   ggtitle("endorsement of generic for distractor items") +
-#   geom_errorbar(aes(ymin=response-ci, ymax=response+ci), width=.1, position=position_dodge(.9))
-# ggsave(file="distractor-generic.pdf", width=10, height=6)
-# 
-# ######normalize responses
-# 
-# nr = subset(df, trial_type == "speaker_ratings")
-# nr$response = as.numeric(nr$response)
-# nr = ddply(nr, .(workerid), transform, normed_response = response / sum(response))
-# nr_summary = summarySE(nr, measurevar="normed_response", groupvars=c("context", "sentence_type", "category", "amount_positive_examples"))
-# nr_summary$context = factor(nr_summary$context, levels=c("higher", "same", #"a_bit_lower",
-#                                                          "lower"))
-# 
-# ntg = subset(nr_summary, category == "target" & sentence_type == "generic")
-# ggplot(ntg, aes(x=context, y=normed_response, fill=context)) +
-#   geom_bar(position=position_dodge(.9), stat="identity", width=.9) +
-#   #facet_wrap(~ category) +
-#   #theme_bw(24) +
-#   ggtitle("endorsement of generic for target items (50%) (normalized ratings)") +
-#   geom_errorbar(aes(ymin=normed_response-ci, ymax=normed_response+ci), width=.1, position=position_dodge(.9))
-# ggsave(file="normalized-target-generic.pdf", width=10, height=6)
-# 
-# ndg = subset(nr_summary, category == "context" & sentence_type == "generic")
-# ggplot(ndg, aes(x=amount_positive_examples, y=normed_response, fill=amount_positive_examples)) +
-#   geom_bar(position=position_dodge(.9), stat="identity", width=.9) +
-#   ggtitle("endorsement of generic for distractor items") +
-#   geom_errorbar(aes(ymin=normed_response-ci, ymax=normed_response+ci), width=.1, position=position_dodge(.9))
-# ggsave(file="normalized-distractor-generic.pdf", width=10, height=6)
-# 
-# print("number of subjects in each context condition:")
-# print(paste("higher", length(unique(df$workerid[df$context == "higher"]))))
-# print(paste("same", length(unique(df$workerid[df$context == "same"]))))
-# print(paste("a_bit_lower", length(unique(df$workerid[df$context == "a_bit_lower"]))))
-# print(paste("lower", length(unique(df$workerid[df$context == "lower"]))))
-# 
-# # normed_response_generic_target = subset(nr, category_type == "target" & sentence_type == "generic")
-# # normed_response_generic_target_fit = lm(normed_response ~ context, data=normed_response_generic_target)
-# # print(anova(normed_response_generic_target_fit))
-# # response_generic_target = subset(ratings, category_type == "target" & sentence_type == "generic")
-# # response_generic_target_fit = lm(response ~ context, data=normed_response_generic_target)
-# # print(anova(response_generic_target_fit))
-# # 
-# # normed_response_generic_distractor = subset(nr, category == "context" & sentence_type == "generic")
-# # normed_response_generic_distractor_fit = lm(normed_response ~ amount_positive_examples, data=normed_response_generic_distractor)
-# # print(anova(normed_response_generic_distractor_fit))
-# # response_generic_distractor = subset(ratings, category == "context" & sentence_type == "generic")
-# # response_generic_distractor_fit = lm(response ~ amount_positive_examples, data=response_generic_distractor)
-# # print(anova(response_generic_distractor_fit))
-# # 
-# # posterior = subset(df, trial_type=="posterior_predictive")
-# # posterior$response = as.numeric(as.character(posterior$response))
-# # posterior_summary = summarySE(posterior, measurevar="response", groupvars=c("context", "category", "amount_positive_examples"))
-# # posterior_target_fit = lm(response ~ context, data=subset(posterior, category == "target"))
-# # print(anova(posterior_target_fit))
-# # posterior_distractor_fit = lm(response ~ context, data=subset(posterior, category == "context"))
-# # print(anova(posterior_distractor_fit))
-# # ggplot(subset(posterior_summary, category=="target"), aes(x=context, y=response, fill=context)) +
-# #   geom_bar(position=position_dodge(.9), stat="identity", width=.9) +
-# #   ggtitle("posterior predictive measure for target category given generic") +
-# #   geom_errorbar(aes(ymin=response-ci, ymax=response+ci), width=.1, position=position_dodge(.9))
-# # ggsave(file="posterior-target-generic.pdf", width=10, height=6)
-# # ggplot(subset(posterior_summary, category=="context"), aes(x=amount_positive_examples, y=response, fill=amount_positive_examples)) +
-# #   geom_bar(position=position_dodge(.9), stat="identity", width=.9) +
-# #   ggtitle("posterior predictive measure for distractor category given generic") +
-# #   geom_errorbar(aes(ymin=response-ci, ymax=response+ci), width=.1, position=position_dodge(.9))
-# # ggsave(file="posterior-distractor-generic.pdf", width=10, height=6)
-# 
-# target = subset(ratings_summary, category == "target")
-# ggplot(target, aes(x=context, y=response, fill=context)) +
-#   geom_bar(position=position_dodge(.9), stat="identity", width=.9) +
-#   facet_wrap(~ sentence_type) +
-#   #theme_bw(24) +
-#   ggtitle("endorsement of sentences for target items (50%)") +
-#   geom_errorbar(aes(ymin=response-ci, ymax=response+ci), width=.1, position=position_dodge(.9))
-# ggsave(file="target.pdf", width=10, height=6)
-# 
-# distractor = subset(ratings_summary, category == "context")
-# ggplot(distractor, aes(x=amount_positive_examples, y=response, fill=amount_positive_examples)) +
-#   geom_bar(position=position_dodge(.9), stat="identity", width=.9) +
-#   ggtitle("endorsement of sentences for distractor items") +
-#   facet_wrap(~ sentence_type) +
-#   geom_errorbar(aes(ymin=response-ci, ymax=response+ci), width=.1, position=position_dodge(.9))
-# ggsave(file="distractor.pdf", width=10, height=6)
-# 
-# normed_target = subset(nr_summary, category == "target")
-# ggplot(normed_target, aes(x=context, y=normed_response, fill=context)) +
-#   geom_bar(position=position_dodge(.9), stat="identity", width=.9) +
-#   facet_wrap(~ sentence_type) +
-#   #theme_bw(24) +
-#   ggtitle("endorsement of sentences for target items (50%) (normalized)") +
-#   geom_errorbar(aes(ymin=normed_response-ci, ymax=normed_response+ci), width=.1, position=position_dodge(.9))
-# ggsave(file="normed_target.pdf", width=10, height=6)
-# 
-# normed_distractor = subset(nr_summary, category == "context")
-# ggplot(normed_distractor, aes(x=amount_positive_examples, y=normed_response, fill=amount_positive_examples)) +
-#   geom_bar(position=position_dodge(.9), stat="identity", width=.9) +
-#   ggtitle("endorsement of sentences for distractor items (normalized)") +
-#   facet_wrap(~ sentence_type) +
-# geom_errorbar(aes(ymin=normed_response-ci, ymax=normed_response+ci), width=.1, position=position_dodge(.9))
-# ggsave(file="normed_distractor.pdf", width=10, height=6)
-# 
-# 
-# individual_target = subset(df, category=="target" & trial_type == "speaker_ratings")
-# individual_target$sentence_type = factor(individual_target$sentence_type, levels=c("negation", "sometimes", "usually", "generic", "always"))
-# ggplot(individual_target, aes(x=sentence_type, y=response, colour=sentence_type)) +
-#   geom_point(aes(shape=context), stat="identity", size=4) +
-#   ggtitle("individual subject endorsement per sentence for target (50%)") +
-#   facet_wrap(~ workerid)
-# ggsave(file="individuals_target.pdf", width=20, height=12)
-# 
-# individual_context = subset(df, category=="context" & trial_type == "speaker_ratings")
-# individual_context$sentence_type = factor(individual_context$sentence_type, levels=c("negation", "sometimes", "usually", "generic", "always"))
-# ggplot(individual_context, aes(x=sentence_type, y=response, colour=sentence_type)) +
-#   geom_point(aes(shape=amount_positive_examples), stat="identity", size=4) +
-#   ggtitle("individual subject endorsement per sentence for distractor") +
-#   facet_wrap(~ workerid)
-# ggsave(file="individuals_context.pdf", width=20, height=12)
-# 
-# individual_target = subset(df, category=="target" & trial_type == "speaker_ratings")
-# individual_target$sentence_type = factor(individual_target$sentence_type, levels=c("negation", "sometimes", "usually", "generic", "always"))
-# individual_target$context = factor(individual_target$context, levels=c("higher", "same", "a_bit_lower", "lower"))
-# #individual_target$workerid = as.factor(individual_target$workerid)
-# ggplot(individual_target, aes(x=sentence_type, y=response)) +
-#   geom_line(aes(x=sentence_type, y=response, group=workerid), alpha=1/10) +
-#   geom_point(aes(colour=factor(sentence_type)), stat="identity", size=3) +
-#   ggtitle("individual subject endorsement per sentence for target (50%)") +
-#   facet_wrap(~ context)
-# ggsave(file="individuals_target_view2.pdf", width=20, height=8)
-# 
-# individual_context = subset(df, category=="context" & trial_type == "speaker_ratings")
-# individual_context$sentence_type = factor(individual_context$sentence_type, levels=c("negation", "sometimes", "usually", "generic", "always"))
-# individual_context$amount_positive_examples = factor(individual_context$amount_positive_examples, levels=c("few", "three", "half", "most"))
-# #individual_target$workerid = as.factor(individual_target$workerid)
-# ggplot(individual_context, aes(x=sentence_type, y=response)) +
-#   geom_line(aes(x=sentence_type, y=response, group=workerid), alpha=1/10) +
-#   geom_point(aes(colour=factor(sentence_type)), stat="identity", size=3) +
-#   ggtitle("individual subject endorsement per sentence for distractor (10-90%)") +
-#   facet_wrap(~ amount_positive_examples)
-# ggsave(file="individuals_context_view2.pdf", width=20, height=8)
-
-individuals = subset(df, trial_type == "speaker_ratings")
-individuals$category = factor(individuals$category, levels=c("target", "context"), labels=c("target (percent positive=50%)", "distractor (percent positive=context)"))
-#individuals$context = factor(individuals$context, levels=c("lower", "a_bit_lower", "same", "higher"), labels=c("context=10%", "context=30%", "context=50%", "context=90%"))
-individuals$context = factor(individuals$context, levels=c("lower", "a_bit_lower", "same", "higher"), labels=c("10", "30", "50", "90"))
-individuals$numeric_context = as.numeric(as.character(individuals$context))
-individuals$sentence_type = factor(individuals$sentence_type, levels=c("generic", "usually", "negation", "sometimes", "always"))
+name_check = subset(df, trial_type=="name_attention_check")
+name_check$response = as.character(name_check$response)
 
 ###### trial type: sentence ratings (speaker dependent measure)
 
-# # messy graph of individual data with lines linking responses
-# ggplot(individuals, aes(x=sentence_type, y=response)) +
-#   geom_line(aes(x=sentence_type, y=response, group=workerid), alpha=1/10) +
-#   geom_point(aes(colour=factor(sentence_type)), stat="identity", size=3) +
-#   ggtitle("individual subject endorsement per sentence ") +
-#   facet_grid(category ~ context)
-# ggsave(file="individuals.pdf", width=20, height=12, title="individuals")
+point_size = 5
+
+speaker_measure = subset(df, trial_type == "speaker_ratings")
+speaker_measure$response = as.numeric(as.character(speaker_measure$response))
+speaker_measure = ddply(speaker_measure, .(workerid, category_type), transform, normed_response = response / sum(response))
+speaker_measure$sentence_type = factor(speaker_measure$sentence_type, levels=c("generic", "usually", "negation", "sometimes", "always"))
+
+# # better x and y axis choices for messy graph with normalized individual data
+# ggplot(individuals, aes(x=numeric_context, y=normed_response)) +
+#   geom_point(aes(colour=factor(sentence_type)), stat="identity", size=point_size, alpha=1/4) +
+#   ggtitle("normalized individual subject endorsement per sentence") +
+#   facet_grid(category ~ sentence_type) +
+#   theme_bw(18) +
+#   theme(
+#     plot.background = element_blank()
+#     #,panel.grid.major = element_blank()
+#     ,panel.grid.minor = element_blank()
+#   )
+# ggsave(file="normed_individuals.pdf", width=20, height=10, title="normed_individuals")
 # 
-# # cleaner graph of mean data with 95% confidence intervals
-# sentence_summary = summarySE(individuals, measurevar="response", groupvars=c("context", "sentence_type", "category"))
-# ggplot(sentence_summary, aes(x=sentence_type, y=response)) +
-#   geom_point(aes(colour=factor(sentence_type)), stat="identity", size=3) +
-#   ggtitle("mean endorsement per sentence ") +
-#   geom_errorbar(aes(ymin=response-ci, ymax=response+ci, colour=sentence_type), width=.1) +
-#   facet_grid(category ~ context)
-# ggsave(file="mean_responses.pdf", width=20, height=12, title="mean_responses")
+# # better x and y axis choices for cleaner graph with mean of normalized data
+# normed_sentence_summary = summarySE(individuals, measurevar="normed_response", groupvars=c("numeric_context", "sentence_type", "category"))
+# ggplot(normed_sentence_summary, aes(x=numeric_context, y=normed_response)) +
+#   geom_point(aes(colour=factor(sentence_type)), stat="identity", size=point_size) +
+#   ggtitle("mean of normalized endorsement per sentence ") +
+#   geom_errorbar(aes(ymin=normed_response-ci, ymax=normed_response+ci, colour=sentence_type), width=1) +
+#   facet_grid(category ~ sentence_type) +
+#   theme_bw(18) +
+#   theme(
+#     plot.background = element_blank()
+#     #,panel.grid.major = element_blank()
+#     ,panel.grid.minor = element_blank()
+#   )
+# ggsave(file="normed_mean_responses.pdf", width=20, height=10, title="normed_mean_responses")
+
+# # messy graph of individual data
+# ggplot(speaker_measure, aes(x=numeric_context, y=response)) +
+#   geom_point(aes(colour=factor(sentence_type)), stat="identity", size=point_size, alpha=1/4) +
+#   ggtitle("Individual Unnormalized Speaker Measure Responses") +
+#   facet_grid(category ~ sentence_type) +
+#   theme_bw(18) +
+#   theme(
+#     plot.background = element_blank()
+#     #,panel.grid.major = element_blank()
+#     ,panel.grid.minor = element_blank()
+#   )
+# ggsave(file="speaker_individual.pdf", width=20, height=10, title="Individual Unnormalized Speaker Measure Responses")
 # 
-# #cleaner graph with mean of normalized data
-# normed_sentence_summary = summarySE(individuals, measurevar="normed_response", groupvars=c("context", "sentence_type", "category"))
-# ggplot(normed_sentence_summary, aes(x=sentence_type, y=normed_response)) +
-#   geom_point(aes(colour=factor(sentence_type)), stat="identity", size=3) +
-#   ggtitle("mean endorsement per sentence ") +
-#   geom_errorbar(aes(ymin=normed_response-ci, ymax=normed_response+ci, colour=sentence_type), width=.1) +
-#   facet_grid(category ~ context)
-# ggsave(file="normed_mean_responses.pdf", width=20, height=12, title="normed_mean_responses")
+# # messy graph of individual data, keeping track of individuals
+# ggplot(speaker_measure, aes(x=sentence_type, y=response)) +
+#   geom_line(aes(x=sentence_type, y=response, group=category), colour="black",
+#             alpha=1/5) +
+# #   + geom_point(colour="black", size = 4.5) +
+# #   geom_point(colour="pink", size = 4) +
+# #   geom_point(aes(shape = factor(cyl)))
+#   geom_point(aes(shape=sentence_type, colour=context, solid=category),
+#              stat="identity",
+#              size=3) +
+#   ggtitle("Individual Unnormalized Speaker Measure Responses") +
+#   facet_wrap(~ workerid) +
+#   theme(
+#     plot.background = element_blank()
+#     #,panel.grid.major = element_blank()
+#     ,panel.grid.minor = element_blank()
+#     #,legend.position="none"
+#   )
+# ggsave(file="speaker_by_subject.pdf", width=20, height=10, title="Individual Unnormalized Speaker Measure Responses")
+# 
+# # cleaner of mean data
+speaker_measure = subset(speaker_measure, numeric_context != 30)
+sentence_summary = summarySE(speaker_measure, measurevar="response", groupvars=c("numeric_context", "sentence_type", "category"))
+# ggplot(sentence_summary, aes(x=numeric_context, y=response)) +
+#   geom_point(aes(colour=factor(sentence_type)), stat="identity", size=point_size) +
+#   ggtitle("mean of unnormalized endorsement per sentence ") +
+#   geom_errorbar(aes(ymin=response-ci, ymax=response+ci, colour=sentence_type), width=1) +
+#   facet_grid(category ~ sentence_type) +
+#   theme_bw(18) +
+#   theme(
+#     plot.background = element_blank()
+#     #,panel.grid.major = element_blank()
+#     ,panel.grid.minor = element_blank()
+#   )
+# ggsave(file="speaker_mean.pdf", width=20, height=10, title="Means of Unnormalized Speaker Measure Responses")
+# 
+# ###### trial type: posterior predictive measure
+# 
+# posterior_measure = subset(df, trial_type == "posterior_predictive")
+# posterior_measure$response = as.numeric(as.character(posterior_measure$response))
+# 
+# ggplot(posterior_measure, aes(x=numeric_context, y=response)) +
+#   geom_point(aes(colour=factor(numeric_context)), stat="identity", size=point_size, alpha=1/2) +
+#   ggtitle("given 'wugs have fur', how likely is the next wug to have fur?") +
+#   facet_wrap(~ category) +
+#   theme_bw(18) +
+#   theme(
+#     plot.background = element_blank(),
+#     panel.grid.minor = element_blank())
+# ggsave(file="posterior_individual.pdf", width=16, height=8, title="Individual Posterior Measure Responses")
+# 
+# posterior_summary = summarySE(posterior_measure, measurevar="response", groupvars=c("numeric_context", "category"))
+# ggplot(posterior_summary, aes(x=numeric_context, y=response)) +
+#   geom_point(aes(colour=factor(numeric_context)), stat="identity", size=point_size) +
+#   ggtitle("given 'wugs have fur', how likely is the next wug to have fur?") +
+#   geom_errorbar(aes(ymin=response-ci, ymax=response+ci, colour=factor(numeric_context)), width=1) +
+#   facet_wrap(~ category) +
+#   theme_bw(18) +
+#   theme(
+#     plot.background = element_blank(),
+#     panel.grid.minor = element_blank())
+# ggsave(file="posterior_mean.pdf", width=16, height=8, title="Means of Posterior Measure Responses")
 
-# # messy graph with normalized individual data
-# ggplot(individuals, aes(x=sentence_type, y=normed_response)) +
-#   geom_line(aes(x=sentence_type, y=normed_response, group=workerid), alpha=1/10) +
-#   geom_point(aes(colour=factor(sentence_type)), stat="identity", size=3) +
-#   ggtitle("individual subject endorsement per sentence ") +
-#   facet_grid(category ~ context)
-# ggsave(file="normed_individuals.pdf", width=20, height=12, title="normed_individuals")
+sentence_summary$target_proportion = rep(0, nrow(sentence_summary))
+sentence_summary$target_proportion[sentence_summary$numeric_context == 10 & sentence_summary$category=="target (percent positive=50%)"] = 0.5
+sentence_summary$target_proportion[sentence_summary$numeric_context == 10 & sentence_summary$category=="distractor (percent positive=context)"] = 0.1
+sentence_summary$target_proportion[sentence_summary$numeric_context == 30 & sentence_summary$category=="target (percent positive=50%)"] = 0.5
+sentence_summary$target_proportion[sentence_summary$numeric_context == 30 & sentence_summary$category=="distractor (percent positive=context)"] = 0.3
+sentence_summary$target_proportion[sentence_summary$numeric_context == 50 & sentence_summary$category=="target (percent positive=50%)"] = 0.5
+sentence_summary$target_proportion[sentence_summary$numeric_context == 50 & sentence_summary$category=="distractor (percent positive=context)"] = 0.5
+sentence_summary$target_proportion[sentence_summary$numeric_context == 90 & sentence_summary$category=="target (percent positive=50%)"] = 0.5
+sentence_summary$target_proportion[sentence_summary$numeric_context == 90 & sentence_summary$category=="distractor (percent positive=context)"] = 0.9
+sentence_summary$distractor_proportion = rep(0, nrow(sentence_summary))
+sentence_summary$distractor_proportion[sentence_summary$numeric_context == 10 & sentence_summary$category=="target (percent positive=50%)"] = 0.1
+sentence_summary$distractor_proportion[sentence_summary$numeric_context == 10 & sentence_summary$category=="distractor (percent positive=context)"] = 0.5
+sentence_summary$distractor_proportion[sentence_summary$numeric_context == 30 & sentence_summary$category=="target (percent positive=50%)"] = 0.3
+sentence_summary$distractor_proportion[sentence_summary$numeric_context == 30 & sentence_summary$category=="distractor (percent positive=context)"] = 0.5
+sentence_summary$distractor_proportion[sentence_summary$numeric_context == 50 & sentence_summary$category=="target (percent positive=50%)"] = 0.5
+sentence_summary$distractor_proportion[sentence_summary$numeric_context == 50 & sentence_summary$category=="distractor (percent positive=context)"] = 0.5
+sentence_summary$distractor_proportion[sentence_summary$numeric_context == 90 & sentence_summary$category=="target (percent positive=50%)"] = 0.9
+sentence_summary$distractor_proportion[sentence_summary$numeric_context == 90 & sentence_summary$category=="distractor (percent positive=context)"] = 0.5
 
-point_size = 8
-
-# better x and y axis choices for messy graph with normalized individual data
-ggplot(individuals, aes(x=numeric_context, y=normed_response)) +
-  geom_point(aes(colour=factor(sentence_type)), stat="identity", size=point_size, alpha=1/4) +
-  ggtitle("normalized individual subject endorsement per sentence") +
-  facet_grid(category ~ sentence_type) +
+graph_title = "2A Mean Endorsement of Generic and Frequency Sentences"
+ggplot(sentence_summary, aes(x=distractor_proportion, y=response)) +
+  geom_point(aes(colour=factor(target_proportion)), stat="identity", size=point_size) +
+  geom_errorbar(aes(ymin=response-ci, ymax=response+ci, colour=factor(target_proportion)), width=.03) +
+  ggtitle(graph_title) +
+  facet_grid(~sentence_type) +
   theme_bw(18) +
   theme(
     plot.background = element_blank()
-    #,panel.grid.major = element_blank()
     ,panel.grid.minor = element_blank()
   )
-ggsave(file="normed_individuals.pdf", width=20, height=10, title="normed_individuals")
-
-# better x and y axis choices for cleaner graph with mean of normalized data
-normed_sentence_summary = summarySE(individuals, measurevar="normed_response", groupvars=c("numeric_context", "sentence_type", "category"))
-ggplot(normed_sentence_summary, aes(x=numeric_context, y=normed_response)) +
-  geom_point(aes(colour=factor(sentence_type)), stat="identity", size=point_size) +
-  ggtitle("mean of normalized endorsement per sentence ") +
-  geom_errorbar(aes(ymin=normed_response-ci, ymax=normed_response+ci, colour=sentence_type), width=1) +
-  facet_grid(category ~ sentence_type) +
-  theme_bw(18) +
-  theme(
-    plot.background = element_blank()
-    #,panel.grid.major = element_blank()
-    ,panel.grid.minor = element_blank()
-  )
-ggsave(file="normed_mean_responses.pdf", width=20, height=10, title="normed_mean_responses")
-
-# better x and y axis choices for messy graph with normalized individual data
-ggplot(individuals, aes(x=numeric_context, y=response)) +
-  geom_point(aes(colour=factor(sentence_type)), stat="identity", size=point_size, alpha=1/4) +
-  ggtitle("unnormalized individual subject endorsement per sentence") +
-  facet_grid(category ~ sentence_type) +
-  theme_bw(18) +
-  theme(
-    plot.background = element_blank()
-    #,panel.grid.major = element_blank()
-    ,panel.grid.minor = element_blank()
-  )
-ggsave(file="unnormed_individuals.pdf", width=20, height=10, title="unnormed_individuals")
-
-# better x and y axis choices for cleaner graph with mean of normalized data
-normed_sentence_summary = summarySE(individuals, measurevar="response", groupvars=c("numeric_context", "sentence_type", "category"))
-ggplot(normed_sentence_summary, aes(x=numeric_context, y=response)) +
-  geom_point(aes(colour=factor(sentence_type)), stat="identity", size=point_size) +
-  ggtitle("mean of unnormalized endorsement per sentence ") +
-  geom_errorbar(aes(ymin=response-ci, ymax=response+ci, colour=sentence_type), width=1) +
-  facet_grid(category ~ sentence_type) +
-  theme_bw(18) +
-  theme(
-    plot.background = element_blank()
-    #,panel.grid.major = element_blank()
-    ,panel.grid.minor = element_blank()
-  )
-ggsave(file="unnormed_mean_responses.pdf", width=20, height=10, title="unnormed_mean_responses")
-
-###### trial type: posterior predictive measure
+ggsave(file="2A_mean.pdf", width=20, height=5, title=graph_title)
