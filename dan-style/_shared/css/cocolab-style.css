@@ -103,10 +103,6 @@ textarea {
 }
 
 /* Progress Bar */
-.progress{
-  /*position: absolute;
-  right: 10px;
-  bottom: 10px;*/
 }
 .progress span{
   position:relative;
