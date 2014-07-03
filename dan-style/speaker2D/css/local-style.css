@@ -1,0 +1,544 @@
+/* experiment specific css */
+
+.block-text {
+  /*width: 600px;*/
+  text-align: justify;
+  margin: 0 auto;
+  margin-bottom: 1em;
+}
+
+.slider_container {
+    margin: auto auto;
+    width: 400px;
+    display: block;
+}
+
+.completion {
+    width: 300px;
+    text-align: right;
+    height: 2em;
+}
+
+.slider_meaning_container {
+    margin: auto auto;
+    width: 400px;
+    display: block;
+}
+
+.left_slider_meaning {
+  display: inline;
+  float: left;
+  text-align: left;
+}
+
+.right_slider_meaning {
+  display: inline;
+  float: right;
+  text-align: right;
+}
+
+#legal {
+  margin: 0 auto;
+  margin-top: 1.5em;
+  font-size: 0.8em;
+}
+
+#exposure p{
+    margin : 15px auto;
+}
+
+div.centered_form {
+    margin : 0 auto;
+    width : 200px;
+    display:block;
+    text-align:left;
+    overflow:visible;
+    white-space: wrap;
+}
+
+#inner_bet_text {
+    margin : 10px auto;
+}
+
+#check_trial_form {
+
+}
+
+table.form_table {
+    padding: 30 0;
+    font-size:20px;
+    text-align:center;
+    white-space: nowrap;
+}
+
+table.form_table td{
+    font-size:20px;
+}
+
+table.form_table td:first-child{
+   width:50 em;
+}
+
+#canvas{
+    width:100%;
+}
+
+#z_section{
+    position:relative;
+}
+
+p.big {
+    font-size:110%;
+}
+
+p.quest {
+    margin-bottom: 12px;
+    font-size: 24px;
+}
+
+p {
+    margin:0 auto;
+    max-width:90%;
+}
+
+p.padding {
+    margin:20px auto;
+    max-width:90%;
+}
+
+#efficacy_trial_form label{
+    font-size:15px
+}
+
+p.other_label{
+    position:absolute;
+    left:50;
+    bottom:0;
+    margin:0;
+}
+
+button.space {
+margin-top:0;
+}
+
+hr.hbar{
+    margin:0;
+}
+
+table.results_summary {
+    text-align:center;
+    border-collapse:collapse;
+    table-layout:fixed;
+    width: 100%
+}
+
+table.results_summary td{
+    font-size:20px;
+    padding:10px;
+    border-bottom:1px dotted black;
+    white-space: wrap;
+}
+
+table.results_summary_small td{
+    font-size:15px;
+    padding:0px;
+    border-bottom:1px dotted black;
+    white-space: nowrap;
+}
+
+
+
+table.stims_table {
+    border: 3px dashed red;
+}
+
+table.stims_table th {
+}
+
+img.tiger {
+    width : 191px;
+    height : 210px;
+}
+
+table.money {
+    table-layout:fixed;
+    width:50%;
+    text-align:center;
+}
+
+table.money td {
+    width:300px;
+    font-size:30px;
+
+}
+
+table.resp {
+    table-layout:fixed;
+    width:50%;
+    text-align:center;
+}
+
+table.resp td {
+    border-left:solid 30px transparent;
+    border-right:solid 30px transparent;
+}
+
+#response_text {
+    margin: 0
+}
+
+div.wheel_holder{
+    margin: 10 10;
+}
+
+div.exposure_inner{
+    height: 100%; width:100%; margin: 50px 0 0 0;
+}
+
+div.exposure_text{}
+
+div.instruction_wheel{
+    height: 100%; width:100%; margin: 50px 0 0 0;
+}
+
+
+/* form */
+legend{margin:1em 0 0 0; padding:0 0;color:#036;background:transparent;font-size:25;font-weight:bold;text-align:center;}
+
+div.form_holder{
+    width:700;
+    position:relative;
+    text-align:center;
+    margin: 0 auto;
+}
+
+div.form_holder p{
+    text-align:center;
+    font-size:20px;
+    color:#036;
+}
+
+div.form_holder button{
+    font-size: 18px;
+    margin: 15px 0 0;
+    padding: 5px 0px;
+}
+
+
+div.item_per_line{
+    display:block;
+    text-align:left;
+    margin-left:0px;
+    overflow:visible;
+    white-space: wrap;
+}
+
+div.item_per_line label{
+    display:block;
+    text-align:left;
+    font-size:15px;
+    line-height:150%;
+}
+
+div.items_on_line label{
+    display:inline;
+    text-align:center;
+    font-size:15px;
+    line-height:150%;
+    padding:0 15px;
+}
+
+#check_trial_for label{
+    margin-left:155px;
+}
+
+#condition_check_trial_form label{
+    margin-left:30px;
+}
+
+
+div.long_form p.info{
+    margin:0 0 55px 0;
+    padding:0;
+    font-size: 15px;
+    color:black;
+}
+
+div.long_form p{
+    color:#036;
+    font-size: 15px;
+    margin: 20px 0 0 0;
+}
+
+div.long_form label{
+ font-size:15px;
+}
+
+
+
+#subj_info_form p{
+    max-width:100%;
+}
+
+/* #inner_screen { */
+/*     position : absolute; */
+/*     top: 323; */
+/*     left:226; */
+/*     height:182; */
+/*     width:347; */
+/*     background-color:#00ff00; */
+/*     z-index:1000; */
+/* } */
+
+#inner_screen {
+    position : absolute;
+    top: 30;
+    left:145;
+    height:180;
+    width:510;
+    background-color:white;
+    z-index:1000;
+    overflow:hidden;
+}
+
+#zach_screen {
+    position:relative;
+    height: 350px;
+    width: auto;
+}
+
+/* .caption{ */
+/*     font-size:20px; */
+/* } */
+
+
+
+/* div.radio_holder label{ */
+/*     display:block; */
+/*     text-align:left; */
+/*     font-size:10px; */
+/* } */
+
+/* div.radio_holder p{ */
+
+/*     font-size:30px; */
+/*     margin:40px auto 0px auto; */
+/*     color:#036; */
+/* } */
+
+
+
+/* div.radio_holder p.left{ */
+/*     text-align:left; */
+/*     padding-left:150px; */
+/*     margin-top:40px; */
+/*     font-size:30px; */
+/*     color:#036; */
+/* } */
+
+/* div.radio_holder p.multi{ */
+/*     text-align:left; */
+/*     margin-top:20px; */
+/*     font-size:25px; */
+/*     color:#036; */
+/* } */
+
+/* div.radio_holder label{ */
+/*     display:block; */
+/*     padding-left:5em; */
+/*     text-align:left; */
+/* } */
+
+/* div.condition label{ */
+/*     display:block; */
+/*     padding-left:200px; */
+/*     text-align:left; */
+/*     line-height:125%; */
+/* } */
+
+/* div.smallcenter label{ */
+/*     display:block; */
+/*     padding-left:300px; */
+/*     text-align:left; */
+/*     line-height:125%; */
+/* } */
+
+
+/* div.multi label{ */
+/*     display:inline; */
+/*     padding-left:20px; */
+/*     text-align:left; */
+/* } */
+
+/* div.input_holder{ */
+/*     text-align:center; */
+/*     display:inline; */
+/* } */
+
+/* div.input_holder label{ */
+/*     padding-bottom:30; */
+/*     margin-left:15px; */
+/*     text-align:center; */
+/* } */
+
+/* div.input_holder p{ */
+/*     margin-top:40px; */
+/*     font-size:20px; */
+/*     color:#036; */
+/* } */
+
+/* div.input_holder p.subheader{ */
+/*     font-size:25px; */
+/* } */
+
+.bubble
+{
+    position: relative;
+    width: 650px;
+    height: 100px;
+    text-align: center;
+    line-height: 100px;
+    margin: 10px auto;
+    background-color: #fff;
+    border: 8px solid #666;
+    -webkit-border-radius: 30px;
+    -moz-border-radius: 30px;
+    border-radius: 30px;
+    -webkit-box-shadow: 2px 2px 4px #888;
+    -moz-box-shadow: 2px 2px 4px #888;
+    box-shadow: 2px 2px 4px #888;
+}
+
+p.thought
+{
+    width: 650px;
+    line-height: 100px;
+    -webkit-border-radius: 108px;
+    -moz-border-radius: 108px;
+    border-radius: 108px;
+}
+
+p.bubble:before, p.bubble:after
+{
+    content: ' ';
+    position: absolute;
+    width: 0;
+    height: 0;
+}
+
+p.speech:before
+{
+    left: 30px;
+    top: 100px;
+    border: 25px solid;
+    border-color: #666 transparent transparent #666;
+}
+
+p.speech:after
+{
+    left: 38px;
+    top: 100px;
+    border: 15px solid;
+    border-color: #fff transparent transparent #fff;
+}
+
+p.thought:before, p.thought:after
+{
+    left: 10px;
+    top: 70px;
+    width: 40px;
+    height: 40px;
+    background-color: #fff;
+    border: 8px solid #666;
+    -webkit-border-radius: 28px;
+    -moz-border-radius: 28px;
+    border-radius: 28px;
+}
+
+p.thought:after
+{
+    width: 20px;
+    height: 20px;
+    left: 5px;
+    top: 100px;
+    -webkit-border-radius: 18px;
+    -moz-border-radius: 18px;
+    border-radius: 18px;
+}
+
+.slider_outer {
+    width: 100%;
+    height: 50px;
+    margin:5px 0px 35px 0px;
+    padding: 0px;
+}
+
+.slider_holder {
+    width: 100%;
+    height: 40px;
+    margin: 5px 0px;
+    padding: 0px;
+}
+
+.creature_image {
+    padding: 1px;
+}
+
+p.mtop{
+margin-top:10px;
+}
+
+.test_all_zach{
+    margin: 30px 0px;
+}
+
+.zach_holder{
+position:absolute;
+left:0px;
+bottom:0px;
+text-align:left;
+}
+
+.z_name{
+position:absolute;
+bottom:5px;
+left:90px;
+}
+
+
+/* Progress Bar */
+.progress{
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+}
+.progress span{
+  position:relative;
+  top: -6px;
+}
+.bar-wrapper{
+    height:20px;
+    width:200px;
+    border:1px solid #000000;
+    display:inline-block;
+}
+.bar{
+    position:relative;
+    height:100%;
+    width:0px;
+    background-color:#000000
+}
+
+.lower {
+    margin-top: 20px;
+}
+
+li {
+  width: 250px;
+  margin: auto auto;
+  text-align: left;
+}
+
+p {
+    margin-bottom: 20px;
+}
