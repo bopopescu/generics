@@ -1,0 +1,9 @@
+.slider {
+	width: 400;
+	margin: 10px;
+}
+
+#feedback {
+	color: green;
+	font-size: 32px;
+}
