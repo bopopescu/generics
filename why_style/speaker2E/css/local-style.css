@@ -7,3 +7,25 @@
 	color: green;
 	font-size: 32px;
 }
+
+.example {
+    box-sizing: border-box; /* add this */
+    -moz-box-sizing: border-box; /* Firefox */
+    -webkit-box-sizing: border-box; /* Older Webkit browsers */
+	border: 1px white solid;
+	margin: 5px;
+}
+
+.slide {
+	overflow: auto;
+}
+
+#examples {
+	overflow: auto;
+}
+
+#small_examples {
+	overflow: auto;
+	width: 500px;
+	margin: auto auto;
+}

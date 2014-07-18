@@ -43,7 +43,7 @@
     <img src="../_shared/images/stanford.png" alt="Stanford CoCoLab" id="stanford_logo"></img>
     <p id="cocolab">Stanford CoCoLab</p>
     <p id="instruct-text">In this experiment, you will see some flora and fauna from an "alien planet" and be asked to evaluate potential descriptions.</p>
-    <p>This experiment should take about {{}} minutes to complete.</p>
+    <p>This experiment should take about 6 minutes to complete.</p>
     <p>We try hard to make our HITs enjoyable, so please reward us by paying attention and reading our instructions and questions carefully.</p>
     <p>Thank you!</p>
     <button id="start_button" type="button">Start Experiment</button>
@@ -77,6 +77,8 @@
     <p>Scientist Sally is describing the properties of the <span class="BIRDS">{{}}</span> you saw on your hike.</p>
     <p>How likely do you think it is that Scientist Sally would say the following sentence?</p>
     <h3 id="sentence">"<span class="cap_WUGS">{{}}</span> have <span class="TAILS">{{}}</span>."</h3>
+    <button onclick="_s.reminder()">Remind me what the <span class="WUGS">{{}}</span> looked like.</button>
+    <div id="small_examples">{{}}</div>
     <table id="slider_table" class="slider_table">
       <tr><td class="left">very unlikely</td><td class="right">very likely</td></tr>
       <tr><td colspan="2"><div id="generic_slider" class="slider"></div></td></tr>

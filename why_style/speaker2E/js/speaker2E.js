@@ -4,7 +4,6 @@ function make_slides(f) {
   slides.i0 = slide({
      name : "i0",
      start: function() {
-      console.log('this version last updated at 11:23 AM on Tuesday, July 8, 2014');
       exp.startT = Date.now();
      }
   });
@@ -36,13 +35,14 @@ function make_slides(f) {
 
       $("#examples").html("");
       for (var i=0; i<num_examples; i++) {
-        $("#examples").append("<svg id='svg" + i + "'/>");
+        $("#examples").append("<svg class='example' id='svg" + i + "'/>");
         var props = has_property[i];
         var all_props = exp.data.categories[type].creator.draw("svg" + i, props, 0.5);
         exp.data.categories[type].examples.push(all_props);
       }
       var category_name = function() {
         _s.trial_data = {
+          "trial_type":"repeat_name",
           "category_name": name,
           "response": null
         }
@@ -51,10 +51,8 @@ function make_slides(f) {
         $("#question").show();
         $("#feedback").hide();
         $(".err").hide();
-        for (var i=0; i<num_examples; i++) {
-          $("#svg" + i).unbind("click");
-          $("#svg" + i).css("border", "solid 1px white")
-        }
+        $(".example").unbind("click");
+        $(".example").css("border", "1px white solid")
       }
       var property_clicks = function() {
         $(".err").hide();
@@ -64,13 +62,12 @@ function make_slides(f) {
         $("#question").html("Please click on all the <span class='WUGS'>{{}}</span> with <span class='TAILS'>{{}}.");
         if (feature_order.length > 0) {
           $("#i_dont_see_any").show();
-          for (var i=0; i<num_examples; i++) {
-            $("#svg" + i).unbind("click");
-            $("#svg" + i).css("border", "solid 1px white")
-          }
+          $(".example").unbind("click");
+          $(".example").css("border", "1px white solid")
           _s.current_feature_index = feature_order.shift();
           var feature = Ecosystem.features[genus][_s.current_feature_index];
           _s.trial_data = {
+            "trial_type": "clicking",
             "category_name": name,
             "feature": feature,
             "feature_type": exp.data.categories.features[feature],
@@ -128,13 +125,16 @@ function make_slides(f) {
     name : "generic",
     present : _.shuffle(exp.present_generics),
     present_handle : function(stim) {
+      $("#small_examples").hide();
       exp.sliderPost = null;
       $(".err").hide();
       $(".BIRD").html(stim.genus);
       $(".BIRDS").html(local_utils.plural(stim.genus));
       $(".cap_WUGS").html(utils.caps(local_utils.plural(stim.name)));
+      $(".WUGS").html(local_utils.plural(stim.name));
       $(".TAILS").html(local_utils.plural(stim.feature));
       _s.trial_data = utils.clone(stim);
+      _s.trial_data["reminder"] = false;
       this.init_sliders();
       //var properties = exp.data.categories[stim.type].examples;
     },
@@ -144,6 +144,19 @@ function make_slides(f) {
         _stream.apply(this); //use exp.go() if and only if there is no "present" data.
       } else {
         $(".err").show();
+      }
+    },
+    reminder : function() {
+      var examples = $("#small_examples");
+      examples.show();
+      _s.trial_data["reminder"] = true;
+      examples.empty();
+      var type = _s.trial_data.type;
+      var genus = _s.trial_data.genus;
+      var num_examples = 10;
+      for (var i=0; i<num_examples; i++) {
+        $("#small_examples").append("<svg class='example' id='small_svg" + i + "'/>");
+        Ecosystem.draw(genus, exp.data.categories[type].examples[i], "small_svg" + i, 0.25);
       }
     },
     init_sliders : function() {
@@ -190,17 +203,18 @@ function make_slides(f) {
 /// init ///
 function init() {
   exp.sliderPost = null;
-  exp.data = {};
-  exp.data.trials = [];
-  exp.data.catch_trials = [];
-  exp.data.condition = {}; //can randomize between subject conditions here
-  exp.data.system = {
-    Browser : BrowserDetect.browser,
-    OS : BrowserDetect.OS,
-    screenH: screen.height,
-    screenUH: exp.height,
-    screenW: screen.width,
-    screenUW: exp.width
+  exp.data = {
+    "trials": [],
+    "catch_trials": [],
+    "condition": {},
+    "system": {
+      "Browser" : BrowserDetect.browser,
+      "OS" : BrowserDetect.OS,
+      "screenH": screen.height,
+      "screenUH": exp.height,
+      "screenW": screen.width,
+      "screenUW": exp.width 
+    }
   };
   exp.data.nonce_words = local_utils.nonce.slice(0, 3);
   var target_category = exp.data.nonce_words[0];
@@ -209,7 +223,7 @@ function init() {
   var names = {
     "target_category":exp.data.nonce_words[0],
     "distractor1":exp.data.nonce_words[1],
-    "distractor2":exp.data.nonce_words[2],
+    "distractor2":exp.data.nonce_words[2]
   }
   var types = ["target_category", "distractor1", "distractor2"];
   var features = _.shuffle(["tar1", "tar2", "tar3"]);

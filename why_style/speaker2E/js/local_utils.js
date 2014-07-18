@@ -12,7 +12,7 @@ var local_utils = {
     return function() {
       $("#svg" + i).unbind("click");
       if (has_property[_s.current_feature_index]) {
-        $("#svg" + i).css("border", "solid 1px black");
+        $("#svg" + i).css("border", "1px black solid");
         _s.trial_data.correct_clicks++;
       } else {
         _s.trial_data.incorrect_clicks++;

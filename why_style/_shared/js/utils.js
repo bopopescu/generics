@@ -52,7 +52,8 @@ var utils = {
 			max : 1,
 			step: 0.01,
 			value : 0.5,
-			slide : response_callback
+			slide : response_callback,
+            change : response_callback
 		});
 		$(label + ' .ui-slider-handle').hide();
         $(label).mousedown(function(){
