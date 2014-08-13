@@ -46,6 +46,22 @@ make_exp = function() {
       //what should we do if we try to go on after the experiment is done?
     }
   };
+
+  f.get_length = function() {
+    if (this.structure) {
+        var length = 0;
+        for (var i=0; i<exp.structure.length; i++) {
+            var a_slide = exp.structure[i];
+            if (a_slide.present) {
+                length += a_slide.present.length;
+            } else {
+                length ++;
+            }
+        }
+        this.nQs = length;
+    }
+  };
+
   f.phase = 0; //out of all the trials, what number are we on?
   return f;
 }
