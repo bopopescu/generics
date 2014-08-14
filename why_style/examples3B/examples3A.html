@@ -1,0 +1,91 @@
+<html>
+
+<head>
+    <title>Answer Some Simple Common Knowledge Questions</title>
+
+    <!--JS-->
+
+    <!-- external general utilities -->
+    <script src="../_shared/js/jquery-1.11.1.min.js "></script>
+    <script src="../_shared/full-projects/jquery-ui/jquery-ui.min.js"></script>
+    <script src="../_shared/js/underscore-min.js"></script>
+    <!-- if you want to draw stuff: -->
+    <script src="../_shared/js/raphael-min.js"></script>
+
+    <!-- cocolab experiment logic -->
+    <script src="../_shared/js/exp-V2.js"></script>
+    <script src="../_shared/js/stream-V2.js"></script>
+
+    <!-- cocolab general utilities -->
+    <script src="../_shared/js/mmturkey.js "></script>
+    <script src="../_shared/js/browserCheck.js"></script>
+    <!-- if you want to draw cute creatures (depends on raphael): -->
+    <script src="../_shared/js/ecosystem.js"></script>
+
+    <!-- experiment specific helper functions -->
+    <script src="../_shared/js/utils.js"></script>
+    <script src="js/local_utils.js"></script>
+
+    <!--CSS-->
+    <link href="../_shared/full-projects/jquery-ui/jquery-ui.min.css" rel="stylesheet" type="text/css"/>
+    <link href="../_shared/css/cocolab-style.css" rel="stylesheet" type="text/css"/>
+    <link href="css/local-style.css" rel="stylesheet" type="text/css"/>
+
+    <!-- experiment file -->
+    <script src="js/examples3A.js"></script>
+    
+</head>
+
+<body onload="init();">
+  <noscript>This task requires JavaScript.</noscript>
+
+  <div class="slide" id="i0" >
+    <img src="../_shared/images/stanford.png" alt="Stanford CoCoLab" id="stanford_logo"></img>
+    <p id="cocolab">Stanford CoCoLab</p>
+    <p id="instruct-text">In this experiment, you will be asked some simple commonsense questions.</p>
+    <p>This experiment should take about 1 minute to complete.</p>
+    <p>We try hard to make our HITs enjoyable, so please reward us by paying attention and reading our instructions and questions carefully.</p>
+    <p>Thank you!</p>
+    <button id="start_button" type="button">Start Experiment</button>
+    <p id="legal">Legal information: By answering the following questions, you are participating in a study being performed by cognitive scientists in the Stanford Department of Psychology. If you have questions about this research, please contact Erin Bennett at <a href="mailto://erindb@stanford.edu">erindb@stanford.edu</a> or Noah Goodman, at ngoodman@stanford.edu. You must be  at least 18 years old to participate. Your participation in this research is voluntary. You may decline to answer any or all of the following questions. You may decline further participation, at any time, without adverse consequences. Your anonymity is assured; the researchers who have requested your participation will not receive any personal information about you.</p>
+  </div>
+
+  <div class="slide" id="generic">
+    <h3 id="sentence"></h3>
+    <table id="slider_table" class="slider_table">
+      <tr><td class="left">definitely no</td><td class="right">definitely yes</td></tr>
+      <tr><td colspan="2"><div id="generic_slider" class="slider"></div></td></tr>
+    </table>
+    <button onclick="_s.button()">Continue</button>
+    <p class="err">Please adjust the slider before continuing.</p>
+  </div>
+
+  <div class="slide"  id="subj_info">
+    <div class="long_form">
+      <div class="subj_info_title">Additional information</div>
+      <p class="info">Answering these questions is optional, but will help us understand your answers.</p>
+
+      <p>Native Language: <input type="text" id="language"/></p>
+      <label>(the language(s) spoken at home when you were a child)</label>
+
+      <p>We would be interested in any comments you have about this experiment. Please type them here:</p>
+      <textarea id="comments" rows="3" cols="50"></textarea>
+      <br/>
+      <button onclick="_s.submit()">Submit</button>
+    </div>
+  </div>
+
+  <div id="thanks" class="slide js" >
+    <p  class="big">Thanks for your Time!</p>
+  </div>
+
+  <div class="progress">
+    <span>Progress:</span>
+    <div class="bar-wrapper">
+      <div class="bar" width="0%">
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

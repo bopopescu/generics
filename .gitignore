@@ -8,3 +8,7 @@
 *.properties
 *.input
 *.question
+*.aux
+*.log
+*.backup
+*.toc
