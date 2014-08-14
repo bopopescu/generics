@@ -3,3 +3,8 @@
 *.results
 *.participants
 *.pdf
+*.png
+*.tsv
+*.properties
+*.input
+*.question
